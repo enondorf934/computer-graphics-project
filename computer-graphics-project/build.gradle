@@ -4,3 +4,110 @@
  * This is a general purpose Gradle build.
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds/
  */
+
+buildscript
+{
+	repositories
+	{
+		mavenCentral()
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+def createScript(project, mainClass, name, jvmOpts) {
+  project.tasks.create(name: name, type: CreateStartScripts) {
+    applicationName = name
+    mainClassName   = mainClass
+	defaultJvmOpts  = jvmOpts
+    outputDir       = new File(project.buildDir, 'scripts')
+    classpath       = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files + project.configurations.runtime
+  }
+  project.tasks[name].dependsOn(project.jar)
+
+  project.applicationDistribution.with {
+    into("bin") {
+      from(project.tasks[name])
+      fileMode = 0755
+    }
+  }
+}
+
+sourceCompatibility = 1.6
+
+group = "computer.graphics.project"
+version = '1.1.0'
+
+applicationName = "project"
+mainClassName = "computer.graphics.project.Application"
+applicationDefaultJvmArgs = ['-Xms128m', '-Xmx756m', '-noclassgc',\
+ '-Dfile.encoding=utf-8', '-Dapple.laf.useScreenMenuBar=false',\
+ '-Dapple.awt.showGrowBox=true', '-Dapple.awt.brushMetalLook=false',\
+ '-Dapple.awt.antialiasing=on', '-Dapple.awt.graphics.UseQuartz=true', ]
+
+ def altJvmArgs = ['-Xms128m', '-Xmx768m', '-noclassgc',\
+ '-Dfile.encoding=utf-8', '-Dapple.laf.useScreenMenuBar=false',\
+ '-Dapple.awt.showGrowBox=true', '-Dapple.awt.brushMetalLook=false',\
+ '-Dapple.awt.antialiasing=on', '-Dapple.awt.graphics.UseQuartz=true', ]
+
+
+createScript(project, 'computer.graphics.project.Application', 'project', altJvmArgs)
+
+
+sourceSets
+{
+	main
+	{
+		resources
+		{
+			srcDir 'src/main/java'
+			//include ".*.rsrc"
+			exclude "**/.DS_Store", "**/*.java.*"
+		}
+	}
+}
+
+jar
+{
+    manifest
+    {
+        attributes\
+        	'Implementation-Title': 'computer-graphics-project',\
+			'Implementation-Version': version,\
+			'Main-Class': mainClassName
+
+			manifest.attributes provider: 'tribe7.net'
+    		manifest.attributes permissions: 'all-permissions'
+    		manifest.attributes codebase: '*'
+    }
+}
+
+javadoc
+{
+	maxMemory '756m'
+}
+
+
+startScripts
+{
+	doLast
+	{
+		def wsf = file getWindowsScript()
+	}
+}
+
+
+repositories
+{
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies
+{
+	compile ('org.jogamp.jogl:jogl-all-main:2.1.5-01') { transitive = true }
+	compile ('org.jogamp.gluegen:gluegen-rt-main:2.1.5-01') { transitive = true }
+}
