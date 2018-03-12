@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.util.Random;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
@@ -12,16 +13,21 @@ import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import drawables.*;
+import drawables.tree.*;
+
 public final class Application implements GLEventListener
 {
     public static final GLU		GLU = new GLU();
 	public static final GLUT	GLUT = new GLUT();
 	public static final Random	RANDOM = new Random();
 
-    private int				k = 0;		// Just an animation counter
+   	private int				k = 0;		// Just an animation counter
 	private int				w;			// Canvas width
 	private int				h;			// Canvas height
 	private TextRenderer	renderer;
+	private ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+	private ArrayList<BasicTree> trees = new ArrayList<BasicTree>();
 
     public static void main(String[] args)
 	{
@@ -87,8 +93,16 @@ public final class Application implements GLEventListener
 		GL2		gl = drawable.getGL().getGL2();
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);		// Clear the buffer
-		drawSomething(gl);						// Draw something
-		drawSomeText(drawable);					// Draw some text
+		drawSomething(gl);				// Draw something
+		drawSomeText(drawable);				// Draw some text
+		for (Cloud cloud: clouds)
+		{
+			cloud.draw(gl);
+		}
+		for (BasicTree tree: trees)
+		{
+			tree.draw(gl);
+		}
 	}
 
 
