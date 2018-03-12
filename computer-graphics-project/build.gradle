@@ -38,11 +38,11 @@ def createScript(project, mainClass, name, jvmOpts) {
 
 sourceCompatibility = 1.6
 
-group = "computer.graphics.project"
+group = "cgproject"
 version = '1.1.0'
 
 applicationName = "project"
-mainClassName = "computer.graphics.project.Application"
+mainClassName = "cgproject.Application"
 applicationDefaultJvmArgs = ['-Xms128m', '-Xmx756m', '-noclassgc',\
  '-Dfile.encoding=utf-8', '-Dapple.laf.useScreenMenuBar=false',\
  '-Dapple.awt.showGrowBox=true', '-Dapple.awt.brushMetalLook=false',\
@@ -54,7 +54,7 @@ applicationDefaultJvmArgs = ['-Xms128m', '-Xmx756m', '-noclassgc',\
  '-Dapple.awt.antialiasing=on', '-Dapple.awt.graphics.UseQuartz=true', ]
 
 
-createScript(project, 'computer.graphics.project.Application', 'project', altJvmArgs)
+createScript(project, 'cgproject.Application', 'project', altJvmArgs)
 
 
 sourceSets

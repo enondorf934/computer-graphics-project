@@ -1,4 +1,4 @@
-package computer.graphics.project;
+package cgproject;
 
 import java.awt.*;
 import java.awt.event.*;
