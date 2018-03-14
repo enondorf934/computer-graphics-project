@@ -1,8 +1,5 @@
-package cgproject;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
 import java.util.Random;
 import java.util.ArrayList;
 import javax.swing.*;
