@@ -1,17 +1,21 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Random;
+import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import javax.swing.*;
+import java.util.Random;
+
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JFrame;
 import javax.media.opengl.glu.*;
+
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.awt.TextRenderer;
-import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.gl2.*;
 
-import drawables.*;
-import drawables.tree.*;
+
+import drawables.Cloud;
+import drawables.tree.BasicTree;
 
 public final class Application implements GLEventListener
 {
@@ -55,8 +59,8 @@ public final class Application implements GLEventListener
 
     public void		init(GLAutoDrawable drawable)
 	{
-		w = drawable.getWidth();
-		h = drawable.getHeight();
+		w = drawable.getSurfaceWidth();
+		h = drawable.getSurfaceHeight();
 
 		renderer = new TextRenderer(new Font("Serif", Font.PLAIN, 18),true, true);
 	}
@@ -117,7 +121,7 @@ public final class Application implements GLEventListener
 
     private void	drawSomeText(GLAutoDrawable drawable)
 	{
-		renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+		renderer.beginRendering(drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		renderer.setColor(1.0f, 1.0f, 0, 1.0f);
 		renderer.draw("This is a point", w/2 + 8, h/2 - 5);
 		renderer.endRendering();
