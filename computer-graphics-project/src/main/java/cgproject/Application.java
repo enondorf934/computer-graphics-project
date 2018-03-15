@@ -111,6 +111,10 @@ public final class Application implements GLEventListener
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);		// Clear the buffer
 
+    // Enable alpha blending to support translucency
+    gl.glEnable(GL.GL_BLEND);
+    gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+
     setScreenProjection(gl);
 
     drawSky(gl);
@@ -177,8 +181,20 @@ public final class Application implements GLEventListener
     BasicTree tree = new BasicTree();
 
     tree.addLeafCluster(new LeafCluster(536, 75, 169, 155));
+    tree.addLeafCluster(new LeafCluster(654, 119, 156, 99));
+    tree.addLeafCluster(new LeafCluster(498, 102, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
+    tree.addLeafCluster(new LeafCluster(465, 185, 146, 124));
+    tree.addLeafCluster(new LeafCluster(495, 245, 120, 141));
+    tree.addLeafCluster(new LeafCluster(675, 167, 84, 91));
+    tree.addLeafCluster(new LeafCluster(573, 212, 81, 66));
+    tree.addLeafCluster(new LeafCluster(651, 248, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
+    tree.addLeafCluster(new LeafCluster(696, 242, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
+    tree.addLeafCluster(new LeafCluster(663, 279, 108, 111));
+    tree.addLeafCluster(new LeafCluster(675, 255, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
+    tree.addLeafCluster(new LeafCluster(524, 276, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
+    tree.addLeafCluster(new LeafCluster(537, 336, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
+    tree.addLeafCluster(new LeafCluster(488, 353, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
 
     tree.draw(gl);
-
   }
 }
