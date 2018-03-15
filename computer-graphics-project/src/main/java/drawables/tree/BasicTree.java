@@ -1,6 +1,7 @@
 package drawables.tree;
 
 import java.util.ArrayList;
+import javax.media.opengl.*;
 import javax.media.opengl.GL2;
 
 import drawables.Drawable;
@@ -45,7 +46,23 @@ public class BasicTree implements Drawable, Shape
 	@Override
 	public void draw(GL2 gl)
 	{
-		// TODO: Draw tree trunk
+		// Fill tree trunk
+		gl.glColor3f(0.644f, 0.446f, 0.106f);
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2i(614, 426);
+		gl.glVertex2i(648, 426);
+		gl.glVertex2i(648, 591);
+		gl.glVertex2i(614, 591);
+		gl.glEnd();
+
+		// Outline tree trunk
+		gl.glColor3f(0.0f, 0.0f, 0.0f);	// black
+		gl.glBegin(GL.GL_LINE_LOOP);
+		gl.glVertex2i(614, 426);
+		gl.glVertex2i(648, 426);
+		gl.glVertex2i(648, 591);
+		gl.glVertex2i(614, 591);
+		gl.glEnd();
 
 		for (BasicBranch branch: branches)
 			branch.draw(gl);
