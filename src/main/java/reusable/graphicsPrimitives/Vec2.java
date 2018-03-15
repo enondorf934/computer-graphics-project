@@ -18,12 +18,12 @@ public class Vec2
 	
 	//Static variables 
 	
-	public Vec2 Zero = new Vec2(0,0); 	//(0,0)
-	public Vec2 Left = new Vec2(-1,0); 	//(-1, 0)
-	public Vec2 Right = new Vec2(1,0); 	//(1, 0)
-	public Vec2 Up = new Vec2(0,1); 	//(0, 1)
-	public Vec2 Down = new Vec2(0,-1); 	//(0, -1)
-	public Vec2 Unit = new Vec2(1, 1); 	//(1, 1)	
+	public static Vec2 Zero = new Vec2(0,0); 	//(0,0)
+	public static Vec2 Left = new Vec2(-1,0); 	//(-1, 0)
+	public static Vec2 Right = new Vec2(1,0); 	//(1, 0)
+	public static Vec2 Up = new Vec2(0,1); 		//(0, 1)
+	public static Vec2 Down = new Vec2(0,-1); 	//(0, -1)
+	public static Vec2 Unit = new Vec2(1, 1); 	//(1, 1)	
 	
 	//Instance variables
 	
@@ -41,6 +41,24 @@ public class Vec2
 	{
 		this.x = x;
 		this.y = y;
+	}
+	
+	
+	/**
+	 * Constructs a Vec2 object from an array of coordinates. If there are not enough coordinates, assigns values of 0.
+	 * @param coords The coordinates
+	 */
+	public Vec2(double[] coords)
+	{
+		if (coords.length<2)
+		{
+			if (coords.length<1)
+				x=0;
+			y=0;
+		}
+		
+		this.x=coords[0];		
+		this.y=coords[0];
 	}
 
 	//Getters

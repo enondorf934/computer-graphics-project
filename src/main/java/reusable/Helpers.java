@@ -27,6 +27,28 @@ public class Helpers
 	}
 	
 	
+	//Uses OpenGL to draw the triangle strip specified by a collection of points to the screen
+	public static void drawTriangleStrip(GL gl, ArrayList<Vec2> triangleStrip)
+	{
+		GL2 gl2=gl.getGL2();
+		gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
+		for(Vec2 p:triangleStrip)
+			gl2.glVertex2d(p.getX(), p.getY());
+		gl2.glEnd();
+	}
+	
+	
+	//Uses OpenGL to draw the triangle strip specified by a collection of points to the screen
+	public static void drawLineLoop(GL gl, ArrayList<Vec2> lineLoop)
+	{
+		GL2 gl2=gl.getGL2();
+		gl2.glBegin(GL2.GL_LINE_LOOP);
+		for(Vec2 p:lineLoop)
+			gl2.glVertex2d(p.getX(), p.getY());
+		gl2.glEnd();
+	}
+	
+	
 	//Sets the color OpenGL is using for drawing things.
 	public static void setColor(GL gl, Color color)
 	{
