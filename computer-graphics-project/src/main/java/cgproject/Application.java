@@ -154,11 +154,11 @@ public final class Application implements GLEventListener
     gl.glBegin(GL2.GL_QUADS);
 
     gl.glColor3f(0.458f, 0.643f, 0.996f); // Light blue
-    gl.glVertex2i(0, 720);
-    gl.glVertex2i(1280, 720);
+    gl.glVertex2i(0, 0);
+    gl.glVertex2i(1280, 0);
     gl.glColor3f(1.0f, 1.0f, 1.0f); // White
-    gl.glVertex2i(1280, 129);
-    gl.glVertex2i(0, 129);
+    gl.glVertex2i(1280, 591);
+    gl.glVertex2i(0, 591);
 
     gl.glEnd();
   }
@@ -168,10 +168,10 @@ public final class Application implements GLEventListener
     gl.glBegin(GL2.GL_QUADS);
 
     gl.glColor3f(0.292f, 0.491f, 0.125f); // Green
-    gl.glVertex2i(0, 129);
-		gl.glVertex2i(1280, 129);
-		gl.glVertex2i(1280, 0);
-		gl.glVertex2i(0, 0);
+    gl.glVertex2i(0, 591);
+		gl.glVertex2i(1280, 591);
+		gl.glVertex2i(1280, 720);
+		gl.glVertex2i(0, 720);
 
 		gl.glEnd();
   }
@@ -180,7 +180,9 @@ public final class Application implements GLEventListener
   {
     BasicTree tree = new BasicTree();
 
-    tree.addLeafCluster(new LeafCluster())
+    tree.addLeafCluster(new LeafCluster(536, 75, 169, 155));
+
+    tree.draw(gl);
 
   }
 }
