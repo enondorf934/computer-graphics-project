@@ -1,27 +1,11 @@
-# Created by https://www.gitignore.io/api/java,gradle
-
 ### Java ###
-*.class
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
 *.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+*.class
 
 
 ### Gradle ###
 .gradle
 /build/
-/computer-graphics-project/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -35,4 +19,10 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-# End of https://www.gitignore.io/api/java,gradle
+
+### Eclipse ###
+
+# eclipse project file
+.settings/
+.classpath
+.project
