@@ -24,13 +24,26 @@ public final class LeafCluster implements Drawable
   private float b;      // blue color value
   private float alpha;  // alpha value
 
-  // Constructor
+  // Constructors
   public LeafCluster(int x, int y, int w, int h)
   {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
+  }
+
+  public LeafCluster(int x, int y, int w, int h, float r, float g, float b, float alpha)
+  {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.alpha = alpha;
   }
 
   public void setColor(float r, float g, float b, float alpha)
