@@ -18,26 +18,43 @@ import drawables.tree.*;
 
 public final class Application implements GLEventListener
 {
-    public static final GLU		GLU = new GLU();
+  //**********************************************************************
+  // Public Class Members
+  //**********************************************************************
+
+  public static final GLU		GLU = new GLU();
 	public static final GLUT	GLUT = new GLUT();
 	public static final Random	RANDOM = new Random();
 
-   	private int				k = 0;		// Just an animation counter
+  //**********************************************************************
+	// Private Members
+	//**********************************************************************
+
+  // State (internal) variables
+  private int				k = 0;		// Just an animation counter
+
 	private int				w;			// Canvas width
 	private int				h;			// Canvas height
-	private TextRenderer	renderer;
-	private ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+
+  private ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 	private ArrayList<BasicTree> trees = new ArrayList<BasicTree>();
 
-    public static void main(String[] args)
+  //**********************************************************************
+	// Main
+	//**********************************************************************
+
+  public static void main(String[] args)
 	{
 		GLProfile		profile = GLProfile.getDefault();
 		GLCapabilities	capabilities = new GLCapabilities(profile);
 		GLCanvas		canvas = new GLCanvas(capabilities);
 		JFrame			frame = new JFrame("Template");
 
+    canvas.setPreferredSize(new Dimension(1280, 720));
+
 		frame.setBounds(50, 50, 600, 600);
 		frame.getContentPane().add(canvas);
+    frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -54,19 +71,21 @@ public final class Application implements GLEventListener
 		animator.start();
 	}
 
+  //**********************************************************************
+	// Override Methods (GLEventListener)
+	//**********************************************************************
 
-
-    public void		init(GLAutoDrawable drawable)
+  public void		init(GLAutoDrawable drawable)
 	{
 		w = drawable.getWidth();
 		h = drawable.getHeight();
 
-		renderer = new TextRenderer(new Font("Serif", Font.PLAIN, 18),true, true);
+		// renderer = new TextRenderer(new Font("Serif", Font.PLAIN, 18),true, true);
 	}
 
 	public void		dispose(GLAutoDrawable drawable)
 	{
-		renderer = null;
+		// renderer = null;
 	}
 
 	public void		display(GLAutoDrawable drawable)
@@ -81,9 +100,11 @@ public final class Application implements GLEventListener
 		this.h = h;
 	}
 
+  //**********************************************************************
+	// Private Methods (Rendering)
+	//**********************************************************************
 
-
-    private void	update()
+  private void	update()
 	{
 		k++;									// Counters are useful, right?
 	}
@@ -93,36 +114,63 @@ public final class Application implements GLEventListener
 		GL2		gl = drawable.getGL().getGL2();
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);		// Clear the buffer
-		drawSomething(gl);				// Draw something
-		drawSomeText(drawable);				// Draw some text
-		for (Cloud cloud: clouds)
-		{
-			cloud.draw(gl);
-		}
-		for (BasicTree tree: trees)
-		{
-			tree.draw(gl);
-		}
+
+    setScreenProjection(gl);
+
+    drawSky(gl);
+    drawGround(gl);
+
+    // for (Cloud cloud: clouds)
+		// {
+		// 	cloud.draw(gl);
+		// }
+		// for (BasicTree tree: trees)
+		// {
+		// 	tree.draw(gl);
+		// }
 	}
 
+  //**********************************************************************
+	// Private Methods (Coordinate System)
+	//**********************************************************************
 
-    private void	drawSomething(GL2 gl)
+  private void	setScreenProjection(GL2 gl)
 	{
-		gl.glBegin(GL.GL_POINTS);
+		GLU		glu = new GLU();
 
-		gl.glColor3f(1.0f, 1.0f, 1.0f);
-		gl.glPointSize(2.0f);
-		gl.glVertex2d(0.0, 0.0);
+		gl.glMatrixMode(GL2.GL_PROJECTION);			// Prepare for matrix xform
+		gl.glLoadIdentity();						// Set to identity matrix
+		glu.gluOrtho2D(0.0f, 1280.0f, 0.0f, 720.0f);// 2D translate and scale
+	}
+
+  //**********************************************************************
+	// Private Methods (Scene)
+	//**********************************************************************
+
+  private void drawSky(GL2 gl)
+  {
+    gl.glBegin(GL2.GL_QUADS);
+
+    gl.glColor3f(0.458f, 0.643f, 0.996f); // Light blue
+    gl.glVertex2i(0, 720);
+    gl.glVertex2i(1280, 720);
+    gl.glColor3f(1.0f, 1.0f, 1.0f); // White
+    gl.glVertex2i(1280, 129);
+    gl.glVertex2i(0, 129);
+
+    gl.glEnd();
+  }
+
+  private void drawGround(GL2 gl)
+  {
+    gl.glBegin(GL2.GL_QUADS);
+
+    gl.glColor3f(0.292f, 0.491f, 0.125f); // Green
+    gl.glVertex2i(0, 129);
+		gl.glVertex2i(1280, 129);
+		gl.glVertex2i(1280, 0);
+		gl.glVertex2i(0, 0);
 
 		gl.glEnd();
-	}
-
-
-    private void	drawSomeText(GLAutoDrawable drawable)
-	{
-		renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
-		renderer.setColor(1.0f, 1.0f, 0, 1.0f);
-		renderer.draw("This is a point", w/2 + 8, h/2 - 5);
-		renderer.endRendering();
-	}
+  }
 }
