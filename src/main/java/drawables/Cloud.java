@@ -25,17 +25,6 @@ public class Cloud implements Drawable, Shape
 		this.width = width;
         this.alpha = alpha;
     }
-	//Class (static) variables
-	
-	//Instance variables
-		
-	//Constructors
-
-	//Class (static) methods
-	
-	//Instance methods
-	
-	//Interface methods
 	
 	@Override
 	public void draw(GL2 gl)

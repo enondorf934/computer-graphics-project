@@ -18,6 +18,7 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
 import drawables.tree.BasicTree;
+import drawables.Cloud;
 
 
 /**
@@ -47,6 +48,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		
 	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);	
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
+
+	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+	public static boolean isFirstRender = true;
 
 	/******************************************/
 	/*GLEventListener methods*/
@@ -118,6 +122,15 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static void render(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
+
+		// if(isFirstRender)
+		// {
+		// 	clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
+		// 	clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
+		// 	clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
+
+		// 	isFirstRender = false;
+		// }
 
 		//Draw sky background
 		Drawers.drawSkyRect(gl, new Color[]{new Color(2, 125, 254), new Color(82, 192, 255), new Color(188, 245, 255)}, 0, 1920, horizon, 1080);
