@@ -10,7 +10,6 @@ import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.*;
 import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import drawables.*;
@@ -68,7 +67,7 @@ public final class Application implements GLEventListener
 
 		FPSAnimator		animator = new FPSAnimator(canvas, 60);
 
-		animator.start();
+		//animator.start();
 	}
 
   //**********************************************************************
@@ -79,13 +78,10 @@ public final class Application implements GLEventListener
 	{
 		w = drawable.getWidth();
 		h = drawable.getHeight();
-
-		// renderer = new TextRenderer(new Font("Serif", Font.PLAIN, 18),true, true);
 	}
 
 	public void		dispose(GLAutoDrawable drawable)
 	{
-		// renderer = null;
 	}
 
 	public void		display(GLAutoDrawable drawable)
