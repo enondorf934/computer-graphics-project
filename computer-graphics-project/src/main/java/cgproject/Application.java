@@ -142,7 +142,7 @@ public final class Application implements GLEventListener
 
 		gl.glMatrixMode(GL2.GL_PROJECTION);			// Prepare for matrix xform
 		gl.glLoadIdentity();						// Set to identity matrix
-		glu.gluOrtho2D(0.0f, 1280.0f, 0.0f, 720.0f);// 2D translate and scale
+		glu.gluOrtho2D(0.0f, 1280.0f, 720.0f, 0.0f);// 2D translate and scale
 	}
 
   //**********************************************************************
@@ -178,6 +178,9 @@ public final class Application implements GLEventListener
 
   private void drawTree(GL2 gl)
   {
+    BasicTree tree = new BasicTree();
+
+    tree.addLeafCluster(new LeafCluster())
 
   }
 }
