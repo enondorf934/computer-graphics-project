@@ -18,7 +18,9 @@ public class BasicTree implements Drawable, Shape
 	/**
 	 * The tree's branches
 	 */
-	private ArrayList<BasicBranch> branches = new ArrayList<BasicBranch>();
+	private ArrayList<BasicBranch> branches;
+
+	private ArrayList<LeafCluster> leafClusters;
 
 
 	//Class (static) variables
@@ -26,20 +28,30 @@ public class BasicTree implements Drawable, Shape
 	//Constructors
 	public BasicTree()
 	{
-
+		branches = new ArrayList<BasicBranch>();
+		leafClusters = new ArrayList<LeafCluster>();
 	}
 
 	//Class (static) methods
 
 	//Instance methods
+	public void addLeafCluster(LeafCluster leafCluster)
+	{
+		leafClusters.add(leafCluster);
+	}
 
 	//Interface methods
 
 	@Override
 	public void draw(GL2 gl)
 	{
+		// TODO: Draw tree trunk
+
 		for (BasicBranch branch: branches)
 			branch.draw(gl);
+
+		for (LeafCluster leafCluster : leafClusters)
+			leafCluster.draw(gl);
 	}
 
 
