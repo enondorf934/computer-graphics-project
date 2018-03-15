@@ -120,6 +120,8 @@ public final class Application implements GLEventListener
     drawSky(gl);
     drawGround(gl);
 
+    drawTree(gl);
+
     // for (Cloud cloud: clouds)
 		// {
 		// 	cloud.draw(gl);
@@ -172,5 +174,10 @@ public final class Application implements GLEventListener
 		gl.glVertex2i(0, 0);
 
 		gl.glEnd();
+  }
+
+  private void drawTree(GL2 gl)
+  {
+
   }
 }
