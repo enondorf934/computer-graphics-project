@@ -14,15 +14,15 @@ import drawables.Drawable;
  */
 public final class LeafCluster implements Drawable
 {
-  private int x;        // x-coordinate of upper left corner of leaf cluster
-  private int y;        // y-coordinate of upper left corner of leaf cluster
-  private int w;        // width of leaf cluster
-  private int h;        // height of leaf cluster
+  private int x;                // x-coordinate of upper left corner of leaf cluster
+  private int y;                // y-coordinate of upper left corner of leaf cluster
+  private int w;                // width of leaf cluster
+  private int h;                // height of leaf cluster
 
-  private float r;      // red color value
-  private float g;      // green color value
-  private float b;      // blue color value
-  private float alpha;  // alpha value
+  private float r;              // red color value
+  private float g;              // green color value
+  private float b;              // blue color value
+  private float alpha = 0.60f;  // default transparency
 
   // Constructors
   public LeafCluster(int x, int y, int w, int h)
@@ -36,10 +36,9 @@ public final class LeafCluster implements Drawable
     r = 0.32f;
     g = 0.68f;
     b = 0.40f;
-    alpha = 1.0f;
   }
 
-  public LeafCluster(int x, int y, int w, int h, float r, float g, float b, float alpha)
+  public LeafCluster(int x, int y, int w, int h, float r, float g, float b)
   {
     this.x = x;
     this.y = y;
@@ -49,15 +48,13 @@ public final class LeafCluster implements Drawable
     this.r = r;
     this.g = g;
     this.b = b;
-    this.alpha = alpha;
   }
 
-  public void setColor(float r, float g, float b, float alpha)
+  public void setColor(float r, float g, float b)
   {
     this.r = r;
     this.g = g;
     this.b = b;
-    this.alpha = alpha;
   }
 
   public void draw(GL2 gl)
