@@ -9,6 +9,22 @@ import javax.media.opengl.GL2;
 public class Cloud implements Drawable, Shape
 {
 
+	public GL2 gl;
+    public int cx;
+    public int cy;
+	public int height;
+	public int width;
+    public float alpha;
+
+    public Cloud(GL2 gl, int cx, int cy, int height, int width, float alpha)
+    {
+        this.gl = gl;
+        this.cx = cx;
+        this.cy = cy;
+		this.height = height;
+		this.width = width;
+        this.alpha = alpha;
+    }
 	//Class (static) variables
 	
 	//Instance variables
@@ -24,7 +40,18 @@ public class Cloud implements Drawable, Shape
 	@Override
 	public void draw(GL2 gl)
 	{
+		Cloud cloud = this;
 
+		gl.glBegin(GL2.GL_POLYGON);
+		gl.glColor4f(1.0f, 0.0f, 0.0f, cloud.alpha);
+
+		gl.glVertex2i(cloud.cx, cloud.cy);
+		gl.glVertex2i(cloud.cx, cloud.cy + cloud.height);
+		gl.glVertex2i(cloud.cx + cloud.width, cloud.cy + cloud.height);
+		gl.glVertex2i(cloud.cx + cloud.width, cloud.cy);
+		gl.glVertex2i(cloud.cx, cloud.cy);
+
+		gl.glEnd();
 	}
 
 	@Override
