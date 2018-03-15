@@ -24,7 +24,7 @@ public class Cloud implements Drawable, Shape
 	@Override
 	public void draw(GL2 gl)
 	{
-		// TODO Auto-generated method stub		
+
 	}
 
 	@Override
