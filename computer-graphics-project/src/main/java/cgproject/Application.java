@@ -180,13 +180,16 @@ public final class Application implements GLEventListener
   {
     BasicTree tree = new BasicTree();
 
+    tree.addLeafCluster(new LeafCluster(628, 156, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
     tree.addLeafCluster(new LeafCluster(536, 75, 169, 155));
     tree.addLeafCluster(new LeafCluster(654, 119, 156, 99));
     tree.addLeafCluster(new LeafCluster(498, 102, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
+    tree.addLeafCluster(new LeafCluster(465, 326, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
     tree.addLeafCluster(new LeafCluster(465, 185, 146, 124));
     tree.addLeafCluster(new LeafCluster(495, 245, 120, 141));
     tree.addLeafCluster(new LeafCluster(675, 167, 84, 91));
     tree.addLeafCluster(new LeafCluster(573, 212, 81, 66));
+    tree.addLeafCluster(new LeafCluster(584, 276, 124, 150));
     tree.addLeafCluster(new LeafCluster(651, 248, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
     tree.addLeafCluster(new LeafCluster(696, 242, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
     tree.addLeafCluster(new LeafCluster(663, 279, 108, 111));
@@ -194,6 +197,8 @@ public final class Application implements GLEventListener
     tree.addLeafCluster(new LeafCluster(524, 276, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
     tree.addLeafCluster(new LeafCluster(537, 336, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
     tree.addLeafCluster(new LeafCluster(488, 353, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
+    tree.addLeafCluster(new LeafCluster(668, 356, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
+
 
     tree.draw(gl);
   }
