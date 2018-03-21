@@ -26,21 +26,30 @@ public class Cloud implements Drawable, Shape
         this.alpha = alpha;
     }
 	
+	public int getCx() {
+		return this.cx;
+	}
+
+	public int getCy() {
+		return this.cy;
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public float getAlpha() {
+		return this.alpha;
+	}
+
 	@Override
 	public void draw(GL2 gl)
 	{
-		Cloud cloud = this;
-
-		gl.glBegin(GL2.GL_POLYGON);
-		gl.glColor4f(1.0f, 0.0f, 0.0f, cloud.alpha);
-
-		gl.glVertex2i(cloud.cx, cloud.cy);
-		gl.glVertex2i(cloud.cx, cloud.cy + cloud.height);
-		gl.glVertex2i(cloud.cx + cloud.width, cloud.cy + cloud.height);
-		gl.glVertex2i(cloud.cx + cloud.width, cloud.cy);
-		gl.glVertex2i(cloud.cx, cloud.cy);
-
-		gl.glEnd();
+		
 	}
 
 	@Override

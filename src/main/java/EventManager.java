@@ -19,6 +19,7 @@ import javax.media.opengl.glu.GLU;
 
 import drawables.tree.BasicTree;
 import drawables.Cloud;
+import drawables.Mountain;
 
 
 /**
@@ -50,6 +51,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
 	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
 	public static boolean isFirstRender = true;
 
 	/******************************************/
@@ -117,20 +119,33 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		screenWidth = width;
 		screenHeight = height;	
 	}
+
+	public static void initializeClouds(GL2 gl)
+	{
+		clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
+		clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
+		clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
+	}
+
+	public static void initializeMountains(GL2 gl)
+	{
+		mountains.add(new Mountain(gl, 10, horizon-2, 100, 60));
+		mountains.add(new Mountain(gl, 50, horizon-2, 40, 60));
+		mountains.add(new Mountain(gl, 500, horizon-2, 50, 30));
+	}
 	
 	//Actually does the rendering
 	public static void render(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
 
-		// if(isFirstRender)
-		// {
-		// 	clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
-		// 	clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
-		// 	clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
+		if(isFirstRender)
+		{
+			initializeClouds(gl);
+			initializeMountains(gl);
 
-		// 	isFirstRender = false;
-		// }
+			isFirstRender = false;
+		}
 
 		//Draw sky background
 		Drawers.drawSkyRect(gl, new Color[]{new Color(2, 125, 254), new Color(82, 192, 255), new Color(188, 245, 255)}, 0, 1920, horizon, 1080);
@@ -140,6 +155,13 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		
 		//Draw the tree
 		Drawers.drawTree(gl,  theTree);
+
+		Drawers.drawMountains(gl, mountains);
+
+		for(Cloud cloud : clouds)
+		{
+			Drawers.drawCloud(gl, cloud);
+		}
 		
 	
 	}

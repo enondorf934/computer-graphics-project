@@ -10,6 +10,8 @@ import javax.media.opengl.GL2;
 
 import drawables.tree.BasicTree;
 import reusable.Helpers;
+import drawables.Cloud;
+import drawables.Mountain;
 public class Drawers
 {
 
@@ -49,6 +51,32 @@ public class Drawers
 	//Method for drawing the ground backdrop (the gradient)
 	public static void drawTree(GL2 gl, BasicTree tree)
 	{	
-		tree.draw(gl);;
+		tree.draw(gl);
+	}
+
+	public static void drawMountains(GL2 gl, ArrayList<Mountain> mountains)
+	{
+		for(Mountain mountain : mountains) {
+			mountain.draw(gl);
+		}
+	}
+
+	public static void drawCloud(GL2 gl, Cloud cloud)
+	{
+		int cx = cloud.getCx();
+		int cy = cloud.getCy();
+		int height = cloud.getHeight();
+		int width = cloud.getWidth();
+
+		gl.glBegin(GL2.GL_POLYGON);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, cloud.getAlpha());
+
+		gl.glVertex2i(cx, cy);
+		gl.glVertex2i(cx, cy + height);
+		gl.glVertex2i(cx + width, cy + height);
+		gl.glVertex2i(cx + width, cy);
+		gl.glVertex2i(cx, cy);
+
+		gl.glEnd();
 	}
 }
