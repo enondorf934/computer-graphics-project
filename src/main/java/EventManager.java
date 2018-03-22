@@ -36,6 +36,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private int screenHeight = 1080;	
 	
 	private static int horizon = 467;
+	private static int mountainHorizon = horizon - 2;
 	
 	
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
@@ -129,9 +130,30 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	public static void initializeMountains(GL2 gl)
 	{
-		mountains.add(new Mountain(gl, 10, horizon-2, 100, 60));
-		mountains.add(new Mountain(gl, 50, horizon-2, 40, 60));
-		mountains.add(new Mountain(gl, 500, horizon-2, 50, 30));
+		mountains.add(new Mountain(gl, 500, mountainHorizon, 50, 30));
+		mountains.add(new Mountain(gl, 800, mountainHorizon, 300, 350));
+		mountains.add(new Mountain(gl, 1760, mountainHorizon, 200, 280));
+		mountains.add(new Mountain(gl, 900, mountainHorizon, 200, 250));
+
+		mountains.add(new Mountain(gl, 1500, mountainHorizon, 180, 200));
+		mountains.add(new Mountain(gl, 1400, mountainHorizon, 160, 140));
+		mountains.add(new Mountain(gl, 1200, mountainHorizon, 100, 120));
+		mountains.add(new Mountain(gl, 1600, mountainHorizon, 90, 100));
+		mountains.add(new Mountain(gl, 1710, mountainHorizon, 75, 50));
+		mountains.add(new Mountain(gl, 1680, mountainHorizon, 50, 30));
+
+		mountains.add(new Mountain(gl, 1750, mountainHorizon, 40, 30));
+
+
+		mountains.add(new Mountain(gl, 875, mountainHorizon, 100, 110));
+		mountains.add(new Mountain(gl, 1000, mountainHorizon, 50, 75));
+		mountains.add(new Mountain(gl, 1050, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(gl, 600, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(gl, 400, mountainHorizon, 150, 200));
+		mountains.add(new Mountain(gl, 75, mountainHorizon, 200, 175));
+		mountains.add(new Mountain(gl, 100, mountainHorizon, 70, 120));
+		mountains.add(new Mountain(gl, 10, mountainHorizon, 100, 60));
+		mountains.add(new Mountain(gl, 50, mountainHorizon, 40, 60));
 	}
 	
 	//Actually does the rendering
@@ -152,9 +174,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		//Draw the ground
 		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 196, horizon-1);
-		
-		//Draw the tree
-		Drawers.drawTree(gl,  theTree);
 
 		Drawers.drawMountains(gl, mountains);
 
@@ -162,6 +181,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		{
 			Drawers.drawCloud(gl, cloud);
 		}
+		
+		//Draw the tree
+		Drawers.drawTree(gl,  theTree);
+
+
 		
 	
 	}

@@ -32,10 +32,21 @@ public class Mountain implements Drawable, Shape
 	@Override
     public void draw(GL2 gl)
 	{
-        Helpers.setColor(gl, Color.BLACK);
+        Helpers.setColor(gl, new Color(94, 135, 0));
         gl.glBegin(GL2.GL_POLYGON);
 
-        for(int k = 0; k<180; k += 10)
+        for(int k = 0; k<=180; k += 10)
+        {
+            double rad = (k*Math.PI)/180;
+			gl.glVertex2f((float)(cx + Math.cos(rad) * width), (float)( cy + Math.sin(rad) * height));
+        }
+
+        gl.glEnd();
+
+        Helpers.setColor(gl, Color.BLACK);
+        gl.glBegin(GL2.GL_LINE_LOOP);
+
+        for(int k = 0; k<=180; k += 10)
         {
             double rad = (k*Math.PI)/180;
 			gl.glVertex2f((float)(cx + Math.cos(rad) * width), (float)( cy + Math.sin(rad) * height));
