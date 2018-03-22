@@ -134,17 +134,13 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(gl, 800, mountainHorizon, 300, 350));
 		mountains.add(new Mountain(gl, 1760, mountainHorizon, 200, 280));
 		mountains.add(new Mountain(gl, 900, mountainHorizon, 200, 250));
-
 		mountains.add(new Mountain(gl, 1500, mountainHorizon, 180, 200));
 		mountains.add(new Mountain(gl, 1400, mountainHorizon, 160, 140));
 		mountains.add(new Mountain(gl, 1200, mountainHorizon, 100, 120));
 		mountains.add(new Mountain(gl, 1600, mountainHorizon, 90, 100));
 		mountains.add(new Mountain(gl, 1710, mountainHorizon, 75, 50));
 		mountains.add(new Mountain(gl, 1680, mountainHorizon, 50, 30));
-
 		mountains.add(new Mountain(gl, 1750, mountainHorizon, 40, 30));
-
-
 		mountains.add(new Mountain(gl, 875, mountainHorizon, 100, 110));
 		mountains.add(new Mountain(gl, 1000, mountainHorizon, 50, 75));
 		mountains.add(new Mountain(gl, 1050, mountainHorizon, 100, 200));

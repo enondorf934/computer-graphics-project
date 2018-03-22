@@ -4,7 +4,7 @@ import javax.media.opengl.GL2;
 
 /**
  * A class for holding information about a cloud to be drawn
- * @author DEMcKnight
+ * @author Beth Nondorf
  */
 public class Cloud implements Drawable, Shape
 {

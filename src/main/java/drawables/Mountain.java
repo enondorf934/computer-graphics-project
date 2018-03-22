@@ -8,8 +8,8 @@ import javax.media.opengl.GL2;
 import reusable.Helpers;
 
 /**
- * A class for holding information about a cloud to be drawn
- * @author DEMcKnight
+ * A class for holding information about a mountain to be drawn
+ * @author Beth Nondorf
  */
 public class Mountain implements Drawable, Shape
 {
