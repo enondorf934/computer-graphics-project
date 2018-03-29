@@ -25,34 +25,10 @@ public class Cloud implements Drawable, Shape
 		this.width = width;
         this.alpha = alpha;
     }
-	
-	public int getCx() {
-		return this.cx;
-	}
-
-	public int getCy() {
-		return this.cy;
-	}
-
-	public int getHeight() {
-		return this.height;
-	}
-
-	public int getWidth() {
-		return this.width;
-	}
-
-	public float getAlpha() {
-		return this.alpha;
-	}
 
 	@Override
 	public void draw(GL2 gl)
 	{
-		// int cx = cloud.getCx();
-		// int cy = cloud.getCy();
-		// int height = cloud.getHeight();
-		// int width = cloud.getWidth();
 
 		gl.glBegin(GL2.GL_POLYGON);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);

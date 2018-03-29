@@ -9,6 +9,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -20,6 +21,7 @@ import javax.media.opengl.glu.GLU;
 import drawables.tree.BasicTree;
 import drawables.Cloud;
 import drawables.Mountain;
+import drawables.CloudCluster;
 
 
 /**
@@ -37,6 +39,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	
 	private static int horizon = 467;
 	private static int mountainHorizon = horizon - 2;
+
+	private static int lowestCloudLevel = horizon + 275;
 	
 	
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
@@ -54,6 +58,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
 	public static boolean isFirstRender = true;
+	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 
 	/******************************************/
 	/*GLEventListener methods*/
@@ -123,9 +128,23 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	public static void initializeClouds(GL2 gl)
 	{
-		clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
-		clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
-		clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
+
+		Random rand = new Random();
+
+		//generate the centers for the clusters and add the cluster to the list
+		for(int i = 0; i<10; i++)
+		{
+			int x = rand.nextInt((1700)+1) + 100;
+			int y = rand.nextInt((200)+1) + lowestCloudLevel;
+
+			cloudClusterList.add(new CloudCluster(gl, x, y, 100, 150, new ArrayList<Cloud>()));
+		}
+
+
+
+		// clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
+		// clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
+		// clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
 	}
 
 	public static void initializeMountains(GL2 gl)
@@ -175,7 +194,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		Drawers.drawMountains(gl, mountains);
 
 		//Draw the clouds
-		Drawers.drawCloud(gl, clouds);
+		Drawers.drawCloud(gl, cloudClusterList);
 		
 		
 		//Draw the tree
