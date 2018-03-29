@@ -61,22 +61,25 @@ public class Drawers
 		}
 	}
 
-	public static void drawCloud(GL2 gl, Cloud cloud)
+	public static void drawCloud(GL2 gl, ArrayList<Cloud> clouds)
 	{
-		int cx = cloud.getCx();
-		int cy = cloud.getCy();
-		int height = cloud.getHeight();
-		int width = cloud.getWidth();
+		for(Cloud cloud : clouds) {
+			cloud.draw(gl);
+		}
+		// int cx = cloud.getCx();
+		// int cy = cloud.getCy();
+		// int height = cloud.getHeight();
+		// int width = cloud.getWidth();
 
-		gl.glBegin(GL2.GL_POLYGON);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, cloud.getAlpha());
+		// gl.glBegin(GL2.GL_POLYGON);
+		// gl.glColor4f(1.0f, 1.0f, 1.0f, cloud.getAlpha());
 
-		gl.glVertex2i(cx, cy);
-		gl.glVertex2i(cx, cy + height);
-		gl.glVertex2i(cx + width, cy + height);
-		gl.glVertex2i(cx + width, cy);
-		gl.glVertex2i(cx, cy);
+		// gl.glVertex2i(cx, cy);
+		// gl.glVertex2i(cx, cy + height);
+		// gl.glVertex2i(cx + width, cy + height);
+		// gl.glVertex2i(cx + width, cy);
+		// gl.glVertex2i(cx, cy);
 
-		gl.glEnd();
+		// gl.glEnd();
 	}
 }

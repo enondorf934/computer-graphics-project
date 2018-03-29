@@ -171,12 +171,12 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//Draw the ground
 		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 196, horizon-1);
 
+		//Draw the background mountains
 		Drawers.drawMountains(gl, mountains);
 
-		for(Cloud cloud : clouds)
-		{
-			Drawers.drawCloud(gl, cloud);
-		}
+		//Draw the clouds
+		Drawers.drawCloud(gl, clouds);
+		
 		
 		//Draw the tree
 		Drawers.drawTree(gl,  theTree);

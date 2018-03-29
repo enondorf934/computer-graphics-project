@@ -49,7 +49,21 @@ public class Cloud implements Drawable, Shape
 	@Override
 	public void draw(GL2 gl)
 	{
-		
+		// int cx = cloud.getCx();
+		// int cy = cloud.getCy();
+		// int height = cloud.getHeight();
+		// int width = cloud.getWidth();
+
+		gl.glBegin(GL2.GL_POLYGON);
+		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+		gl.glVertex2i(cx, cy);
+		gl.glVertex2i(cx, cy + height);
+		gl.glVertex2i(cx + width, cy + height);
+		gl.glVertex2i(cx + width, cy);
+		gl.glVertex2i(cx, cy);
+
+		gl.glEnd();
 	}
 
 	@Override
