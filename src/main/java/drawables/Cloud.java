@@ -1,6 +1,10 @@
 package drawables;
 
+import java.awt.Color;
+
 import javax.media.opengl.GL2;
+
+import reusable.Helpers;
 
 /**
  * A class for holding information about a cloud to be drawn
@@ -31,14 +35,25 @@ public class Cloud implements Drawable, Shape
 	{
 
 		gl.glBegin(GL2.GL_POLYGON);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+		//Helpers.setColor(gl, new Color(146, 204, 199, alpha));
+		//gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+		gl.glColor4f(146/255f, 204/255f, 199/255f, alpha/255f);
 
 		gl.glVertex2i(cx, cy);
 		gl.glVertex2i(cx, cy + height);
 		gl.glVertex2i(cx + width, cy + height);
 		gl.glVertex2i(cx + width, cy);
 		gl.glVertex2i(cx, cy);
+		gl.glEnd();
 
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glColor3i(255,255,255);
+		gl.glVertex2i(cx, cy);
+		gl.glVertex2i(cx, cy + height);
+		gl.glVertex2i(cx + width, cy + height);
+		gl.glVertex2i(cx + width, cy);
+		gl.glVertex2i(cx, cy);
 		gl.glEnd();
 	}
 

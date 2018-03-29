@@ -129,22 +129,19 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static void initializeClouds(GL2 gl)
 	{
 
-		Random rand = new Random();
+		
 
 		//generate the centers for the clusters and add the cluster to the list
 		for(int i = 0; i<10; i++)
 		{
+			Random rand = new Random();
 			int x = rand.nextInt((1700)+1) + 100;
 			int y = rand.nextInt((200)+1) + lowestCloudLevel;
 
+			//System.out.println(x + "    " + y);
+
 			cloudClusterList.add(new CloudCluster(gl, x, y, 100, 150, new ArrayList<Cloud>()));
 		}
-
-
-
-		// clouds.add(new Cloud(gl, 100, 100, 20, 50, 0.5f));
-		// clouds.add(new Cloud(gl, 100, 120, 35, 55, 0.4f));
-		// clouds.add(new Cloud(gl, 90, 90, 40, 60, 0.3f));
 	}
 
 	public static void initializeMountains(GL2 gl)
