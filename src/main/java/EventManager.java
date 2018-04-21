@@ -62,6 +62,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static boolean isFirstRender = true;
 	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 
+	public static boolean isCloudMoving = false;
+
 	/******************************************/
 	/*GLEventListener methods*/
 	/******************************************/
@@ -77,10 +79,19 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		
 		render(drawable);		
 	}
-	
+
+	private void updateCloudsCounter()
+	{
+		counter++;
+	}
 	private void update()
 	{	
-		counter++;
+		if(isCloudMoving)
+		{
+			updateCloudsCounter();
+			
+		}
+		updateClouds(counter);
 	}
 	
 	private void updateProjectionMatrix(GLAutoDrawable drawable)
@@ -195,6 +206,17 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//Draw the tree
 		Drawers.drawTree(gl,  theTree);
 	
+	}
+
+	public static void updateClouds(int counter)
+	{
+		for(CloudCluster cluster : cloudClusterList)
+		{
+			for(Cloud cloud: cluster.clouds)
+			{
+				cloud.setCx(cloud.getCx() + counter);
+			}
+		}
 	}
 
 
