@@ -52,6 +52,8 @@ public class Helpers
 	//Sets the color OpenGL is using for drawing things.
 	public static void setColor(GL gl, Color color)
 	{
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.getGL2().glColor4d(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, color.getAlpha()/255.0);
 	}
 }

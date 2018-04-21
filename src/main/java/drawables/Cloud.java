@@ -41,10 +41,8 @@ public class Cloud implements Drawable, Shape
 	{
 
 		gl.glBegin(GL2.GL_POLYGON);
-		//Helpers.setColor(gl, new Color(146, 204, 199, alpha));
-		//gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
-
-		gl.glColor4f(r, g, b, alpha);
+		
+		Helpers.setColor(gl, new Color(r, g, b, alpha));
 
 		gl.glVertex2i(cx, cy);
 		gl.glVertex2i(cx, cy + height);
