@@ -49,7 +49,7 @@ public class Cloud implements Drawable, Shape
 
 		gl.glBegin(GL2.GL_LINE_LOOP);
 		gl.glColor3i(255,255,255);
-		gl.glVertex2i(cx, cy);
+		gl.glVertex2i(cx, cy); 
 		gl.glVertex2i(cx, cy + height);
 		gl.glVertex2i(cx + width, cy + height);
 		gl.glVertex2i(cx + width, cy);

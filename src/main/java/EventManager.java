@@ -138,8 +138,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			int x = rand.nextInt((1700)+1) + 100;
 			int y = rand.nextInt((200)+1) + lowestCloudLevel;
 
-			//System.out.println(x + "    " + y);
-
 			cloudClusterList.add(new CloudCluster(gl, x, y, 100, 150, new ArrayList<Cloud>()));
 		}
 	}

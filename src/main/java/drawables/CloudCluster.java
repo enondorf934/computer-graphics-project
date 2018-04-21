@@ -30,14 +30,13 @@ public class CloudCluster implements Drawable, Shape
             Random rand2 = new Random();
 
             int cloudx = rand2.nextInt(((cx + (int).5*width) - (cx - (int).5*width)) +1) + (cx - (int).5*width);
-            int cloudy = rand2.nextInt(((cx + (int).5*height) - (cx - (int).5*height)) +1) + (cx - (int).5*height);
+            int cloudy = rand2.nextInt(((cy + (int).5*height) - (cy - (int).5*height)) +1) + (cy - (int).5*height);
 
             int cloudHeight = rand2.nextInt(((60-20)+1) + 20);
             int cloudWidth = rand2.nextInt(((80-40)+1) + 40);
 
             float alpha = rand2.nextInt(255 + 1);
 
-            System.out.println(cloudx + "    " + cloudy);
             clouds.add(new Cloud(gl, cloudx, cloudy, cloudHeight, cloudWidth, alpha));
         }
 
