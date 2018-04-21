@@ -61,6 +61,26 @@ public class Cloud implements Drawable, Shape
 		gl.glEnd();
 	}
 
+	public void setCx(int n)
+	{
+		this.cx = n;
+	}
+
+	public void setCy(int n)
+	{
+		this.cy = n;
+	}
+
+	public int getCx()
+	{
+		return this.cx;
+	}
+
+	public int getCy()
+	{
+		return this.cy;
+	}
+
 	@Override
 	public boolean containsPoint(double x, double y)
 	{

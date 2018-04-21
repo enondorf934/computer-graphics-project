@@ -31,6 +31,8 @@ import drawables.CloudCluster;
 public class EventManager implements GLEventListener, KeyListener, MouseListener, MouseMotionListener
 {
 
+	private int counter = 0;
+
 	private int virtualWidth=1920;
 	private int virtualHeight=1080;
 	
@@ -78,6 +80,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	
 	private void update()
 	{	
+		counter++;
 	}
 	
 	private void updateProjectionMatrix(GLAutoDrawable drawable)
@@ -128,8 +131,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	public static void initializeClouds(GL2 gl)
 	{
-
-		
 
 		//generate the centers for the clusters and add the cluster to the list
 		for(int i = 0; i<10; i++)
@@ -191,12 +192,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//Draw the clouds
 		Drawers.drawCloud(gl, cloudClusterList);
 		
-		
 		//Draw the tree
 		Drawers.drawTree(gl,  theTree);
-
-
-		
 	
 	}
 
