@@ -18,16 +18,22 @@ public class Cloud implements Drawable, Shape
     public int cy;
 	public int height;
 	public int width;
-    public float alpha;
+	public float r;
+	public float g;
+	public float b;
+	public float alpha;
 
-    public Cloud(GL2 gl, int cx, int cy, int height, int width, float alpha)
+    public Cloud(GL2 gl, int cx, int cy, int height, int width, float r, float g, float b, float alpha)
     {
         this.gl = gl;
         this.cx = cx;
         this.cy = cy;
 		this.height = height;
 		this.width = width;
-        this.alpha = alpha;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.alpha = alpha;
     }
 
 	@Override
@@ -38,7 +44,7 @@ public class Cloud implements Drawable, Shape
 		//Helpers.setColor(gl, new Color(146, 204, 199, alpha));
 		//gl.glColor4f(1.0f, 1.0f, 1.0f, alpha);
 
-		gl.glColor4f(146/255f, 204/255f, 199/255f, alpha/255f);
+		gl.glColor4f(r, g, b, alpha);
 
 		gl.glVertex2i(cx, cy);
 		gl.glVertex2i(cx, cy + height);
@@ -48,7 +54,7 @@ public class Cloud implements Drawable, Shape
 		gl.glEnd();
 
 		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glColor4f(153/255f,186/255f,239/255f,alpha/255f);
+		gl.glColor4f(153/255f,186/255f,239/255f,alpha);
 		gl.glVertex2i(cx, cy); 
 		gl.glVertex2i(cx, cy + height);
 		gl.glVertex2i(cx + width, cy + height);

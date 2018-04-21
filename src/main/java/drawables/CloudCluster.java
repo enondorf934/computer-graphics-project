@@ -3,6 +3,7 @@ package drawables;
 import javax.media.opengl.GL2;
 import java.util.ArrayList;
 import java.util.Random;
+import java.awt.Color;
 
 /**
  * A class for holding information about a cloud cluster to be drawn
@@ -29,15 +30,19 @@ public class CloudCluster implements Drawable, Shape
         {
             Random rand2 = new Random();
 
-            int cloudx = rand2.nextInt(((cx + (int).5*width) - (cx - (int).5*width)) +1) + (cx - (int).5*width);
-            int cloudy = rand2.nextInt(((cy + (int).5*height) - (cy - (int).5*height)) +1) + (cy - (int).5*height);
+            int cloudx = rand2.nextInt(width) + cx;
+            int cloudy = rand2.nextInt(height) + cy;
+ 
 
-            int cloudHeight = rand2.nextInt(((60-20)+1) + 20);
-            int cloudWidth = rand2.nextInt(((80-40)+1) + 40);
+            int cloudHeight = rand2.nextInt(((60-20)+1)) + 20;
+            int cloudWidth = rand2.nextInt(((80-40)+1)) + 40;
 
-            float alpha = rand2.nextInt(255 + 1);
+            float r = rand2.nextFloat()/2f + 0.5f;
+            float g = rand2.nextFloat()/2f + 0.5f;
+            float b = rand2.nextFloat()/2f + 0.5f;
+            float alpha = rand2.nextFloat();
 
-            clouds.add(new Cloud(gl, cloudx, cloudy, cloudHeight, cloudWidth, alpha));
+            clouds.add(new Cloud(gl, cloudx, cloudy, cloudHeight, cloudWidth, r, g, b, alpha));
         }
 
 
