@@ -81,6 +81,11 @@ public class Cloud implements Drawable, Shape
 		return this.cy;
 	}
 
+	public int getWidth() 
+	{
+		return this.width;
+	}
+
 	@Override
 	public boolean containsPoint(double x, double y)
 	{

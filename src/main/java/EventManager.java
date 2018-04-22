@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -63,6 +64,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 
 	public static boolean isCloudMoving = false;
+	public static boolean isCloudDirectionToRight = true;
 
 	/******************************************/
 	/*GLEventListener methods*/
@@ -91,7 +93,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			updateCloudsCounter();
 			
 		}
-		updateClouds(counter);
+		updateClouds(counter, screenWidth);
 	}
 	
 	private void updateProjectionMatrix(GLAutoDrawable drawable)
@@ -208,13 +210,34 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	
 	}
 
-	public static void updateClouds(int counter)
+	public static void updateClouds(int counter, int screenWidth)
 	{
 		for(CloudCluster cluster : cloudClusterList)
 		{
 			for(Cloud cloud: cluster.clouds)
 			{
-				cloud.setCx(cloud.getCx() + counter);
+				if(counter % 4 == 0)
+				{
+					if(isCloudDirectionToRight)
+					{
+						if(cloud.getCx() >= screenWidth) 
+						{
+							cloud.setCx(0 - cloud.getWidth());
+						}
+						cloud.setCx(cloud.getCx() + 1);
+					}
+					else
+					{
+						if(cloud.getCx() + cloud.getWidth() <= 0)
+						{
+							cloud.setCx(screenWidth);
+						}
+
+						cloud.setCx(cloud.getCx() -1);
+					}
+					
+				}
+				
 			}
 		}
 	}
@@ -226,7 +249,15 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		
 		switch (e.getKeyCode())
 		{
-			//TODO
+			case KeyEvent.VK_ENTER:
+				isCloudMoving = !isCloudMoving;
+				break;
+			case KeyEvent.VK_RIGHT:
+				isCloudDirectionToRight = true;
+				break;
+			case KeyEvent.VK_LEFT:
+				isCloudDirectionToRight = false;
+				break;
 		}
 		
 		return;
