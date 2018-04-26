@@ -20,6 +20,7 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
 import drawables.tree.BasicTree;
+import drawables.tree.UnitTree;
 import drawables.Cloud;
 import drawables.Mountain;
 import drawables.CloudCluster;
@@ -49,6 +50,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
 	public static BasicTree theTree = new BasicTree(960, horizon, 2, 2, new Color(166, 129, 62));
+
+	// FIXME
+	public static UnitTree tree = new UnitTree();
 
 	float targetAspectRatio = virtualWidth/virtualHeight;
 
@@ -230,7 +234,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		Drawers.drawCloud(gl, cloudClusterList);
 
 		//Draw the tree
-		Drawers.drawTree(gl,  theTree);
+		Drawers.drawTree(gl,  theTree, tree);
 
 	}
 
