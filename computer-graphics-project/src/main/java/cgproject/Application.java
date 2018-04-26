@@ -199,7 +199,6 @@ public final class Application implements GLEventListener
     tree.addLeafCluster(new LeafCluster(488, 353, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
     tree.addLeafCluster(new LeafCluster(668, 356, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
 
-
     tree.draw(gl);
   }
 }
