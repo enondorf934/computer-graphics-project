@@ -36,11 +36,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private int counter = 0;
 
-	private int virtualWidth=1920;
-	private int virtualHeight=1080;
+	private static int virtualWidth=1920;
+	private static int virtualHeight=1080;
 
-	private int screenWidth = 1920;
-	private int screenHeight = 1080;
+	private static int screenWidth = 1920;
+	private static int screenHeight = 1080;
 
 	private static int horizon = 467;
 	private static int mountainHorizon = horizon - 2;
@@ -185,28 +185,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(gl, 50, mountainHorizon, 40, 60));
 	}
 
-	public static void initializeLeafClusters(GL2 gl)
-	{
-		theTree.addLeafCluster(new LeafCluster(948, 744, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
-    theTree.addLeafCluster(new LeafCluster(856, 825, 169, 155));
-    theTree.addLeafCluster(new LeafCluster(974, 781, 156, 99));
-    theTree.addLeafCluster(new LeafCluster(818, 798, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(785, 574, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
-    theTree.addLeafCluster(new LeafCluster(785, 715, 146, 124));
-    theTree.addLeafCluster(new LeafCluster(815, 655, 120, 141));
-    theTree.addLeafCluster(new LeafCluster(995, 733, 84, 91));
-    theTree.addLeafCluster(new LeafCluster(893, 688, 81, 66));
-    theTree.addLeafCluster(new LeafCluster(904, 624, 124, 150));
-    theTree.addLeafCluster(new LeafCluster(971, 652, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
-    theTree.addLeafCluster(new LeafCluster(1016, 658, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(983, 621, 108, 111));
-    theTree.addLeafCluster(new LeafCluster(995, 645, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
-    theTree.addLeafCluster(new LeafCluster(844, 624, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(857, 564, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(808, 547, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
-    theTree.addLeafCluster(new LeafCluster(988, 544, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
-	}
-
 	//Actually does the rendering
 	public static void render(GLAutoDrawable drawable)
 	{
@@ -216,7 +194,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		{
 			initializeClouds(gl);
 			initializeMountains(gl);
-			initializeLeafClusters(gl);
 
 			isFirstRender = false;
 		}
@@ -233,9 +210,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//Draw the clouds
 		Drawers.drawCloud(gl, cloudClusterList);
 
-		//Draw the tree
-		Drawers.drawTree(gl,  theTree, tree);
-
+		// Transform and draw the tree
+		gl.glPushMatrix(); // Copy the CT for local changes
+		gl.glTranslated((virtualWidth - tree.getWidth()) / 2, horizon, 0.0);
+		Drawers.drawTree(gl, theTree, tree);
+		gl.glPopMatrix();	// Restore the CT from before
 	}
 
 	public static void updateClouds(int counter, int screenWidth)
