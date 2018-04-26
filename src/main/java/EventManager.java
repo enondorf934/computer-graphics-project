@@ -183,24 +183,24 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	public static void initializeLeafClusters(GL2 gl)
 	{
-		theTree.addLeafCluster(new LeafCluster(628, 156, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
-    theTree.addLeafCluster(new LeafCluster(536, 75, 169, 155));
-    theTree.addLeafCluster(new LeafCluster(654, 119, 156, 99));
-    theTree.addLeafCluster(new LeafCluster(498, 102, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(465, 326, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
-    theTree.addLeafCluster(new LeafCluster(465, 185, 146, 124));
-    theTree.addLeafCluster(new LeafCluster(495, 245, 120, 141));
-    theTree.addLeafCluster(new LeafCluster(675, 167, 84, 91));
-    theTree.addLeafCluster(new LeafCluster(573, 212, 81, 66));
-    theTree.addLeafCluster(new LeafCluster(584, 276, 124, 150));
-    theTree.addLeafCluster(new LeafCluster(651, 248, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
-    theTree.addLeafCluster(new LeafCluster(696, 242, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(663, 279, 108, 111));
-    theTree.addLeafCluster(new LeafCluster(675, 255, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
-    theTree.addLeafCluster(new LeafCluster(524, 276, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(537, 336, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
-    theTree.addLeafCluster(new LeafCluster(488, 353, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
-    theTree.addLeafCluster(new LeafCluster(668, 356, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
+		theTree.addLeafCluster(new LeafCluster(948, 744, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
+    theTree.addLeafCluster(new LeafCluster(856, 825, 169, 155));
+    theTree.addLeafCluster(new LeafCluster(974, 781, 156, 99));
+    theTree.addLeafCluster(new LeafCluster(818, 798, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(785, 574, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
+    theTree.addLeafCluster(new LeafCluster(785, 715, 146, 124));
+    theTree.addLeafCluster(new LeafCluster(815, 655, 120, 141));
+    theTree.addLeafCluster(new LeafCluster(995, 733, 84, 91));
+    theTree.addLeafCluster(new LeafCluster(893, 688, 81, 66));
+    theTree.addLeafCluster(new LeafCluster(904, 624, 124, 150));
+    theTree.addLeafCluster(new LeafCluster(971, 652, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(1016, 658, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(983, 621, 108, 111));
+    theTree.addLeafCluster(new LeafCluster(995, 645, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
+    theTree.addLeafCluster(new LeafCluster(844, 624, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(857, 564, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(808, 547, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(988, 544, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
 	}
 
 	//Actually does the rendering
