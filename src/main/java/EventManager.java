@@ -1,0 +1,359 @@
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.RenderingHints.Key;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import javax.media.opengl.glu.GLU;
+
+import drawables.tree.BasicTree;
+import drawables.Cloud;
+import drawables.Mountain;
+import drawables.CloudCluster;
+import drawables.tree.LeafCluster;
+
+
+/**
+ * A class that gets hooked into the GLCanvas that tracks updates and draws to the screen on refreshes.
+ * @author DEMcKnight
+ */
+public class EventManager implements GLEventListener, KeyListener, MouseListener, MouseMotionListener
+{
+
+	private int counter = 0;
+
+	private int virtualWidth=1920;
+	private int virtualHeight=1080;
+
+	private int screenWidth = 1920;
+	private int screenHeight = 1080;
+
+	private static int horizon = 467;
+	private static int mountainHorizon = horizon - 2;
+
+	private static int lowestCloudLevel = horizon + 275;
+
+
+	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
+	public static BasicTree theTree = new BasicTree(960, horizon, 2, 2, new Color(166, 129, 62));
+
+	float targetAspectRatio = virtualWidth/virtualHeight;
+
+	int[] viewport = new int[4];
+	private double[] projectionMatrix = new double[16];
+	private double[] modelMatrix = new double[16];
+
+	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);
+	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
+
+	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
+	public static boolean isFirstRender = true;
+	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
+
+	public static boolean isCloudMoving = false;
+	public static boolean isCloudDirectionToRight = true;
+
+	/******************************************/
+	/*GLEventListener methods*/
+	/******************************************/
+
+	//Called by the drawable to initiate OpenGL rendering by the client.
+	@Override
+	public void display(GLAutoDrawable drawable)
+	{
+		GL2 gl = drawable.getGL().getGL2();
+
+		update();
+		updateProjectionMatrix(drawable);
+
+		render(drawable);
+	}
+
+	private void updateCloudsCounter()
+	{
+		counter++;
+	}
+	private void update()
+	{
+		if(isCloudMoving)
+		{
+			updateCloudsCounter();
+
+		}
+		updateClouds(counter, screenWidth);
+	}
+
+	private void updateProjectionMatrix(GLAutoDrawable drawable)
+	{
+		GL2 gl = drawable.getGL().getGL2();
+
+		//Project to the window
+		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+		gl.glLoadIdentity();
+
+		//Scale what's being drawn to account for changes to the window
+		float scaleX = screenWidth/(float)virtualWidth;
+		float scaleY = screenHeight/(float)virtualHeight;
+		if (scaleX < scaleY)
+			scaleY = scaleX;
+		else
+			scaleX = scaleY;
+
+		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)/scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)/scaleY, 0, 1);
+
+		//Update projection matrices
+		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
+        gl.glGetDoublev(GLMatrixFunc.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+        gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX,  modelMatrix, 0);
+
+	}
+
+    //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
+	@Override
+	public void dispose(GLAutoDrawable arg0)
+	{		}
+
+	//Called by the drawable immediately after the OpenGL context is initialized.
+	@Override
+	public void init(GLAutoDrawable canvas)
+	{
+		//Prepare the Lorenz attractor information for drawing the galaxy later (this way it's not called every update or reshape)
+
+	}
+
+	//Called by the drawable during the first repaint after the component has been resized.
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
+	{
+		screenWidth = width;
+		screenHeight = height;
+	}
+
+	public static void initializeClouds(GL2 gl)
+	{
+
+		//generate the centers for the clusters and add the cluster to the list
+		for(int i = 0; i<10; i++)
+		{
+			Random rand = new Random();
+			int x = rand.nextInt((1700)+1) + 100;
+			int y = rand.nextInt((200)+1) + lowestCloudLevel;
+
+			cloudClusterList.add(new CloudCluster(gl, x, y, 100, 150, new ArrayList<Cloud>()));
+		}
+	}
+
+	public static void initializeMountains(GL2 gl)
+	{
+		mountains.add(new Mountain(gl, 500, mountainHorizon, 50, 30));
+		mountains.add(new Mountain(gl, 800, mountainHorizon, 300, 350));
+		mountains.add(new Mountain(gl, 1760, mountainHorizon, 200, 280));
+		mountains.add(new Mountain(gl, 900, mountainHorizon, 200, 250));
+		mountains.add(new Mountain(gl, 1500, mountainHorizon, 180, 200));
+		mountains.add(new Mountain(gl, 1400, mountainHorizon, 160, 140));
+		mountains.add(new Mountain(gl, 1200, mountainHorizon, 100, 120));
+		mountains.add(new Mountain(gl, 1600, mountainHorizon, 90, 100));
+		mountains.add(new Mountain(gl, 1710, mountainHorizon, 75, 50));
+		mountains.add(new Mountain(gl, 1680, mountainHorizon, 50, 30));
+		mountains.add(new Mountain(gl, 1750, mountainHorizon, 40, 30));
+		mountains.add(new Mountain(gl, 875, mountainHorizon, 100, 110));
+		mountains.add(new Mountain(gl, 1000, mountainHorizon, 50, 75));
+		mountains.add(new Mountain(gl, 1050, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(gl, 600, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(gl, 400, mountainHorizon, 150, 200));
+		mountains.add(new Mountain(gl, 75, mountainHorizon, 200, 175));
+		mountains.add(new Mountain(gl, 100, mountainHorizon, 70, 120));
+		mountains.add(new Mountain(gl, 10, mountainHorizon, 100, 60));
+		mountains.add(new Mountain(gl, 50, mountainHorizon, 40, 60));
+	}
+
+	public static void initializeLeafClusters(GL2 gl)
+	{
+		theTree.addLeafCluster(new LeafCluster(628, 156, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
+    theTree.addLeafCluster(new LeafCluster(536, 75, 169, 155));
+    theTree.addLeafCluster(new LeafCluster(654, 119, 156, 99));
+    theTree.addLeafCluster(new LeafCluster(498, 102, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(465, 326, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
+    theTree.addLeafCluster(new LeafCluster(465, 185, 146, 124));
+    theTree.addLeafCluster(new LeafCluster(495, 245, 120, 141));
+    theTree.addLeafCluster(new LeafCluster(675, 167, 84, 91));
+    theTree.addLeafCluster(new LeafCluster(573, 212, 81, 66));
+    theTree.addLeafCluster(new LeafCluster(584, 276, 124, 150));
+    theTree.addLeafCluster(new LeafCluster(651, 248, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(696, 242, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(663, 279, 108, 111));
+    theTree.addLeafCluster(new LeafCluster(675, 255, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
+    theTree.addLeafCluster(new LeafCluster(524, 276, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(537, 336, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(488, 353, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(668, 356, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
+	}
+
+	//Actually does the rendering
+	public static void render(GLAutoDrawable drawable)
+	{
+		GL2 gl = drawable.getGL().getGL2();
+
+		if(isFirstRender)
+		{
+			initializeClouds(gl);
+			initializeMountains(gl);
+			initializeLeafClusters(gl);
+
+			isFirstRender = false;
+		}
+
+		//Draw sky background
+		Drawers.drawSkyRect(gl, new Color[]{new Color(2, 125, 254), new Color(82, 192, 255), new Color(188, 245, 255)}, 0, 1920, horizon, 1080);
+
+		//Draw the ground
+		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 196, horizon-1);
+
+		//Draw the background mountains
+		Drawers.drawMountains(gl, mountains);
+
+		//Draw the clouds
+		Drawers.drawCloud(gl, cloudClusterList);
+
+		//Draw the tree
+		Drawers.drawTree(gl,  theTree);
+
+	}
+
+	public static void updateClouds(int counter, int screenWidth)
+	{
+		for(CloudCluster cluster : cloudClusterList)
+		{
+			for(Cloud cloud: cluster.clouds)
+			{
+				if(counter % 4 == 0)
+				{
+					if(isCloudDirectionToRight)
+					{
+						if(cloud.getCx() >= screenWidth)
+						{
+							cloud.setCx(0 - cloud.getWidth());
+						}
+						cloud.setCx(cloud.getCx() + 1);
+					}
+					else
+					{
+						if(cloud.getCx() + cloud.getWidth() <= 0)
+						{
+							cloud.setCx(screenWidth);
+						}
+
+						cloud.setCx(cloud.getCx() -1);
+					}
+
+				}
+
+			}
+		}
+	}
+
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+
+		switch (e.getKeyCode())
+		{
+			case KeyEvent.VK_ENTER:
+				isCloudMoving = !isCloudMoving;
+				break;
+			case KeyEvent.VK_RIGHT:
+				isCloudDirectionToRight = true;
+				break;
+			case KeyEvent.VK_LEFT:
+				isCloudDirectionToRight = false;
+				break;
+		}
+
+		return;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		updateMousePosition(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		updateMousePosition(e);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+		updateMousePosition(e);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+		updateMousePosition(e);
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+		updateMousePosition(e);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		updateMousePosition(e);
+		//mouseIsPressed = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
+		updateMousePosition(e);
+		//mouseIsPressed = false;
+	}
+
+	public void updateMousePosition(MouseEvent e)
+	{
+		double wCoord[] = new double[4];// wx, wy, wz;// returned xyz coords
+
+		new GLU().gluUnProject(e.getX(), e.getY(), 0.0, //
+	              modelMatrix, 0,
+	              projectionMatrix, 0,
+	              viewport, 0,
+	              wCoord, 0);
+			mousePosition = new Point2D.Double(wCoord[0], virtualHeight-wCoord[1]);
+	}
+}
