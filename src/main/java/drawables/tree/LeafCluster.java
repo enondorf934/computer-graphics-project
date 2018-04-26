@@ -14,10 +14,10 @@ import drawables.Drawable;
  */
 public final class LeafCluster implements Drawable
 {
-  private int x;                // x-coordinate of upper left corner of leaf cluster
-  private int y;                // y-coordinate of upper left corner of leaf cluster
-  private int w;                // width of leaf cluster
-  private int h;                // height of leaf cluster
+  private double x;                // x-coordinate of upper left corner of leaf cluster
+  private double y;                // y-coordinate of upper left corner of leaf cluster
+  private double w;                // width of leaf cluster
+  private double h;                // height of leaf cluster
 
   private float r;              // red color value
   private float g;              // green color value
@@ -25,7 +25,7 @@ public final class LeafCluster implements Drawable
   private float alpha = 0.60f;  // default transparency
 
   // Constructors
-  public LeafCluster(int x, int y, int w, int h)
+  public LeafCluster(double x, double y, double w, double h)
   {
     this.x = x;
     this.y = y;
@@ -38,7 +38,7 @@ public final class LeafCluster implements Drawable
     b = 0.40f;
   }
 
-  public LeafCluster(int x, int y, int w, int h, float r, float g, float b)
+  public LeafCluster(double x, double y, double w, double h, float r, float g, float b)
   {
     this.x = x;
     this.y = y;
@@ -64,10 +64,10 @@ public final class LeafCluster implements Drawable
     gl.glColor4f(r, g, b, alpha);
 
     // Draw vertices clockwise starting from upper left corner
-    gl.glVertex2i(x, y);  // upper left corner
-    gl.glVertex2i(x + w, y);
-    gl.glVertex2i(x + w, y + h);
-    gl.glVertex2i(x, y + h);
+    gl.glVertex2d(x, y);  // upper left corner
+    gl.glVertex2d(x + w, y);
+    gl.glVertex2d(x + w, y + h);
+    gl.glVertex2d(x, y + h);
 
     gl.glEnd();
 
@@ -76,10 +76,10 @@ public final class LeafCluster implements Drawable
     gl.glColor4f(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
     // Draw vertices clockwise starting from upper left corner
-    gl.glVertex2i(x, y);  // upper left corner
-    gl.glVertex2i(x + w, y);
-    gl.glVertex2i(x + w, y + h);
-    gl.glVertex2i(x, y + h);
+    gl.glVertex2d(x, y);  // upper left corner
+    gl.glVertex2d(x + w, y);
+    gl.glVertex2d(x + w, y + h);
+    gl.glVertex2d(x, y + h);
 
     gl.glEnd();
   }
