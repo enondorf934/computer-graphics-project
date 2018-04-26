@@ -2,6 +2,8 @@
 *.jar
 *.class
 
+### Mac ###
+.DS_Store
 
 ### Gradle ###
 .gradle
