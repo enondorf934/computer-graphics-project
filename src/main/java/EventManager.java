@@ -23,6 +23,7 @@ import drawables.tree.BasicTree;
 import drawables.Cloud;
 import drawables.Mountain;
 import drawables.CloudCluster;
+import drawables.tree.LeafCluster;
 
 
 /**
@@ -36,26 +37,26 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private int virtualWidth=1920;
 	private int virtualHeight=1080;
-	
+
 	private int screenWidth = 1920;
-	private int screenHeight = 1080;	
-	
+	private int screenHeight = 1080;
+
 	private static int horizon = 467;
 	private static int mountainHorizon = horizon - 2;
 
 	private static int lowestCloudLevel = horizon + 275;
-	
-	
+
+
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
 	public static BasicTree theTree = new BasicTree(960, horizon, 2, 2, new Color(166, 129, 62));
-	
+
 	float targetAspectRatio = virtualWidth/virtualHeight;
-	
+
 	int[] viewport = new int[4];
 	private double[] projectionMatrix = new double[16];
 	private double[] modelMatrix = new double[16];
-		
-	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);	
+
+	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
 	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
@@ -69,17 +70,17 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	/******************************************/
 	/*GLEventListener methods*/
 	/******************************************/
-	
+
 	//Called by the drawable to initiate OpenGL rendering by the client.
 	@Override
 	public void display(GLAutoDrawable drawable)
 	{
-		GL2 gl = drawable.getGL().getGL2();		
-	
-		update();	
+		GL2 gl = drawable.getGL().getGL2();
+
+		update();
 		updateProjectionMatrix(drawable);
-		
-		render(drawable);		
+
+		render(drawable);
 	}
 
 	private void updateCloudsCounter()
@@ -87,59 +88,59 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		counter++;
 	}
 	private void update()
-	{	
+	{
 		if(isCloudMoving)
 		{
 			updateCloudsCounter();
-			
+
 		}
 		updateClouds(counter, screenWidth);
 	}
-	
+
 	private void updateProjectionMatrix(GLAutoDrawable drawable)
 	{
-		GL2 gl = drawable.getGL().getGL2();		
-		
+		GL2 gl = drawable.getGL().getGL2();
+
 		//Project to the window
 		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-		gl.glLoadIdentity();	
-		
+		gl.glLoadIdentity();
+
 		//Scale what's being drawn to account for changes to the window
 		float scaleX = screenWidth/(float)virtualWidth;
-		float scaleY = screenHeight/(float)virtualHeight;		
+		float scaleY = screenHeight/(float)virtualHeight;
 		if (scaleX < scaleY)
 			scaleY = scaleX;
 		else
 			scaleX = scaleY;
-		
-		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)/scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)/scaleY, 0, 1);		
-	
+
+		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)/scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)/scaleY, 0, 1);
+
 		//Update projection matrices
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
         gl.glGetDoublev(GLMatrixFunc.GL_PROJECTION_MATRIX, projectionMatrix, 0);
         gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX,  modelMatrix, 0);
-	
+
 	}
 
     //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
 	@Override
 	public void dispose(GLAutoDrawable arg0)
 	{		}
-	
+
 	//Called by the drawable immediately after the OpenGL context is initialized.
 	@Override
 	public void init(GLAutoDrawable canvas)
 	{
 		//Prepare the Lorenz attractor information for drawing the galaxy later (this way it's not called every update or reshape)
-		
+
 	}
 
 	//Called by the drawable during the first repaint after the component has been resized.
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
-	{		
+	{
 		screenWidth = width;
-		screenHeight = height;	
+		screenHeight = height;
 	}
 
 	public static void initializeClouds(GL2 gl)
@@ -179,7 +180,29 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(gl, 10, mountainHorizon, 100, 60));
 		mountains.add(new Mountain(gl, 50, mountainHorizon, 40, 60));
 	}
-	
+
+	public static void initializeLeafClusters(GL2 gl)
+	{
+		theTree.addLeafCluster(new LeafCluster(948, 744, 154, 122, 0.02f, 0.42f, 0.15f));  // dark green
+    theTree.addLeafCluster(new LeafCluster(856, 825, 169, 155));
+    theTree.addLeafCluster(new LeafCluster(974, 781, 156, 99));
+    theTree.addLeafCluster(new LeafCluster(818, 798, 81, 101, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(785, 574, 119, 60, 0.02f, 0.42f, 0.15f)); // dark green
+    theTree.addLeafCluster(new LeafCluster(785, 715, 146, 124));
+    theTree.addLeafCluster(new LeafCluster(815, 655, 120, 141));
+    theTree.addLeafCluster(new LeafCluster(995, 733, 84, 91));
+    theTree.addLeafCluster(new LeafCluster(893, 688, 81, 66));
+    theTree.addLeafCluster(new LeafCluster(904, 624, 124, 150));
+    theTree.addLeafCluster(new LeafCluster(971, 652, 42, 129, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(1016, 658, 120, 93, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(983, 621, 108, 111));
+    theTree.addLeafCluster(new LeafCluster(995, 645, 93, 59, 0.57f, 0.80f, 0.40f));  // yellow
+    theTree.addLeafCluster(new LeafCluster(844, 624, 115, 90, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(857, 564, 92, 104, 0.57f, 0.80f, 0.40f)); // yellow
+    theTree.addLeafCluster(new LeafCluster(808, 547, 72, 100, 0.81f, 0.47f, 0.58f)); // pink
+    theTree.addLeafCluster(new LeafCluster(988, 544, 135, 75, 0.02f, 0.42f, 0.15f)); // dark green
+	}
+
 	//Actually does the rendering
 	public static void render(GLAutoDrawable drawable)
 	{
@@ -189,6 +212,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		{
 			initializeClouds(gl);
 			initializeMountains(gl);
+			initializeLeafClusters(gl);
 
 			isFirstRender = false;
 		}
@@ -204,10 +228,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		//Draw the clouds
 		Drawers.drawCloud(gl, cloudClusterList);
-		
+
 		//Draw the tree
 		Drawers.drawTree(gl,  theTree);
-	
+
 	}
 
 	public static void updateClouds(int counter, int screenWidth)
@@ -220,7 +244,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				{
 					if(isCloudDirectionToRight)
 					{
-						if(cloud.getCx() >= screenWidth) 
+						if(cloud.getCx() >= screenWidth)
 						{
 							cloud.setCx(0 - cloud.getWidth());
 						}
@@ -235,9 +259,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 						cloud.setCx(cloud.getCx() -1);
 					}
-					
+
 				}
-				
+
 			}
 		}
 	}
@@ -246,7 +270,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		
+
 		switch (e.getKeyCode())
 		{
 			case KeyEvent.VK_ENTER:
@@ -259,7 +283,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				isCloudDirectionToRight = false;
 				break;
 		}
-		
+
 		return;
 	}
 
@@ -267,14 +291,14 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public void keyReleased(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -318,18 +342,18 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public void mouseReleased(MouseEvent e)
 	{
 		updateMousePosition(e);
-		//mouseIsPressed = false;	
+		//mouseIsPressed = false;
 	}
-	
+
 	public void updateMousePosition(MouseEvent e)
 	{
 		double wCoord[] = new double[4];// wx, wy, wz;// returned xyz coords
 
 		new GLU().gluUnProject(e.getX(), e.getY(), 0.0, //
 	              modelMatrix, 0,
-	              projectionMatrix, 0, 
-	              viewport, 0, 
+	              projectionMatrix, 0,
+	              viewport, 0,
 	              wCoord, 0);
-			mousePosition = new Point2D.Double(wCoord[0], virtualHeight-wCoord[1]);	
+			mousePosition = new Point2D.Double(wCoord[0], virtualHeight-wCoord[1]);
 	}
 }
