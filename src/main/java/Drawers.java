@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
-import drawables.tree.BasicTree;
 import drawables.tree.UnitTree;
 import reusable.Helpers;
 import drawables.Cloud;
@@ -51,11 +50,9 @@ public class Drawers
 		gl.glEnd();
 	}
 
-	//Method for drawing the ground backdrop (the gradient)
-	public static void drawTree(GL2 gl, BasicTree tree, UnitTree tree2)
+	public static void drawTree(GL2 gl, UnitTree tree)
 	{
 		tree.draw(gl);
-		tree2.draw(gl);
 	}
 
 	public static void drawMountains(GL2 gl, ArrayList<Mountain> mountains)
