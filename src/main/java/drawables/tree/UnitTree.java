@@ -62,13 +62,19 @@ public final class UnitTree implements Drawable, Shape
 
   //****************************************************************************
 
+  public double getWidth()
+  {
+    return w;
+  }
+
+  //****************************************************************************
+
   private void generateLeafClusters()
   {
     leafClusters = new ArrayList<LeafCluster>();
 
     // Generate random number of leaf clusters
     int numClusters = r.nextInt(MAX_NUM_LEAF_CLUSTERS - MIN_NUM_LEAF_CLUSTERS) + MIN_NUM_LEAF_CLUSTERS;
-    System.out.println(numClusters);
 
     // Add each new leaf cluster to tree
     for (int i = 0; i < numClusters; i++)
@@ -90,6 +96,7 @@ public final class UnitTree implements Drawable, Shape
     }
   }
 
+  // FIXME
   private void drawTrunk(GL2 gl)
   {
     gl.glBegin(GL.GL_LINE_LOOP);
@@ -108,6 +115,8 @@ public final class UnitTree implements Drawable, Shape
       leafCluster.draw(gl);
     }
   }
+
+  //****************************************************************************
 
   @Override
   public void draw(GL2 gl)
