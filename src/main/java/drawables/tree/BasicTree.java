@@ -3,6 +3,7 @@ package drawables.tree;
 import java.util.ArrayList;
 import javax.media.opengl.*;
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
 import java.awt.Color;
 
@@ -27,14 +28,13 @@ public class BasicTree implements Drawable, Shape
 	double height;
 	Color trunkColor;
 
+	//The tree outline points and the triangulation of those points
 	ArrayList<Vec2> trunkTriangleStrip = new ArrayList<Vec2>();
 	ArrayList<Vec2> trunkOutline = new ArrayList<Vec2>();
 
-	/**
-	 * The tree's branches
-	 */
+	
+	//The tree's branches and leaves
 	private ArrayList<BasicBranch> branches = new ArrayList<BasicBranch>();
-
 	private ArrayList<LeafCluster> leafClusters;
 
 	//Constructors
@@ -52,27 +52,28 @@ public class BasicTree implements Drawable, Shape
 		this.x=posX;
 		this.y=posY;
 
-		this.width=width;
-		this.height=height;
+		this.width=scaleX;
+		this.height=scaleY;
 		this.trunkColor=trunkColor;
 
-		trunkTriangleStrip.add(new Vec2(x,y));						//1
-		trunkTriangleStrip.add(new Vec2(x+20*scaleX, y));			//8
-		trunkTriangleStrip.add(new Vec2(x+5*scaleX, y+5*scaleY));	//2
-		trunkTriangleStrip.add(new Vec2(x+15*scaleX, y+5*scaleY));	//7
-		trunkTriangleStrip.add(new Vec2(x+6*scaleX, y+9*scaleY));	//3
-		trunkTriangleStrip.add(new Vec2(x+14*scaleX, y+11*scaleY));	//6
-		trunkTriangleStrip.add(new Vec2(x+6*scaleX, y+89*scaleY));	//4
-		trunkTriangleStrip.add(new Vec2(x+14*scaleX, y+89*scaleY));	//5
+		trunkTriangleStrip.add(new Vec2(0,0));				//1
+		trunkTriangleStrip.add(new Vec2(1, 0));				//8
+		trunkTriangleStrip.add(new Vec2(0.25, 0.05618));	//2
+		trunkTriangleStrip.add(new Vec2(0.75, 0.05618));	//7
+		trunkTriangleStrip.add(new Vec2(0.3, 0.101124));	//3
+		trunkTriangleStrip.add(new Vec2(0.7, 0.123596));	//6
+		trunkTriangleStrip.add(new Vec2(0.3, 1));			//4
+		trunkTriangleStrip.add(new Vec2(0.7, 1));			//5
 
-		trunkOutline.add(new Vec2(x,y));						//1
-		trunkOutline.add(new Vec2(x+5*scaleX, y+5*scaleY));		//2
-		trunkOutline.add(new Vec2(x+6*scaleX, y+9*scaleY));		//3
-		trunkOutline.add(new Vec2(x+6*scaleX, y+89*scaleY));	//4
-		trunkOutline.add(new Vec2(x+14*scaleX, y+89*scaleY));	//5
-		trunkOutline.add(new Vec2(x+14*scaleX, y+11*scaleY));	//6
-		trunkOutline.add(new Vec2(x+15*scaleX, y+5*scaleY));	//7
-		trunkOutline.add(new Vec2(x+20*scaleX, y));						//8
+		trunkOutline.add(new Vec2(0,0));			//1
+		trunkOutline.add(new Vec2(0.25, 0.05618));	//2
+		trunkOutline.add(new Vec2(0.3, 0.101124));	//3
+		trunkOutline.add(new Vec2(0.3, 1));			//4
+		trunkOutline.add(new Vec2(0.7, 1));			//5
+		trunkOutline.add(new Vec2(0.7, 0.123596));	//6
+		trunkOutline.add(new Vec2(0.75, 0.05618));	//7
+		trunkOutline.add(new Vec2(1, 0));			//8
+
 
 		leafClusters = new ArrayList<LeafCluster>();
 	}
@@ -86,21 +87,33 @@ public class BasicTree implements Drawable, Shape
 	}
 
 	//Interface methods
-
 	@Override
 	public void draw(GL2 gl)
 	{
+		
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
+		gl.glPushMatrix();
+		gl.glLoadIdentity();
+		gl.glTranslated(x, y, 0);
+		
+		gl.glScaled(width, height, 1);
 		//Draw trunk
+		
 		Helpers.setColor(gl,  trunkColor);
 		Helpers.drawTriangleStrip(gl, trunkTriangleStrip);
 		Helpers.setColor(gl, Color.BLACK);
 		Helpers.drawLineLoop(gl, trunkOutline);
 
+		
+		
+		//Move this after the below for loops to make scaling effect leaf clusters
+		gl.glPopMatrix();
+
 		for (BasicBranch branch: branches)
 			branch.draw(gl);
 
 		for (LeafCluster leafCluster : leafClusters)
-			leafCluster.draw(gl);
+			leafCluster.draw(gl);		
 	}
 
 	
