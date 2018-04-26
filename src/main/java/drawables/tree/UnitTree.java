@@ -18,11 +18,11 @@ public final class UnitTree implements Drawable, Shape
 {
   private static final Random r = new Random();
 
-  private static final double WIDTH = 200.0;
+  private static final double WIDTH = 300.0;
   private static final double HEIGHT = 500.0;
 
   private static final int MIN_NUM_LEAF_CLUSTERS = 12;
-  private static final int MAX_NUM_LEAF_CLUSTERS = 25;
+  private static final int MAX_NUM_LEAF_CLUSTERS = 20;
 
   private static final double MIN_LEAF_WIDTH_RATI0 = 0.1;
   private static final double MAX_LEAF_WIDTH_RATIO = 0.5;
@@ -66,11 +66,28 @@ public final class UnitTree implements Drawable, Shape
   {
     leafClusters = new ArrayList<LeafCluster>();
 
-    for (int i = 0; i < MAX_NUM_LEAF_CLUSTERS; i++)
+    // Generate random number of leaf clusters
+    int numClusters = r.nextInt(MAX_NUM_LEAF_CLUSTERS - MIN_NUM_LEAF_CLUSTERS) + MIN_NUM_LEAF_CLUSTERS;
+    System.out.println(numClusters);
+
+    // Add each new leaf cluster to tree
+    for (int i = 0; i < numClusters; i++)
     {
+      // Generate random leaf cluster width (height) relative to tree width (height)
+      // and within minimum and maximum ratios of tree width (height)
+      double leaf_w = ((MAX_LEAF_WIDTH_RATIO - MIN_LEAF_WIDTH_RATI0) * r.nextDouble() + MIN_LEAF_WIDTH_RATI0) * w;
+      double leaf_h = ((MAX_LEAF_HEIGHT_RATIO - MIN_LEAF_HEIGHT_RATI0) * r.nextDouble() + MIN_LEAF_HEIGHT_RATI0) * h;
 
+      // Generate random leaf cluster position relative to tree width and hight
+      // and given leaf cluster width and height
+      double max_x = x + w - leaf_w;
+      double max_y = y + h - leaf_h;
+      double min_y = (1 - LEAF_CLUSTER_HEIGHT_RATIO) * h + y;
+      double leaf_x = (max_x - x) * r.nextDouble() + x;
+      double leaf_y = (max_y - min_y) * r.nextDouble() + min_y;
+
+      leafClusters.add(new LeafCluster(leaf_x, leaf_y, leaf_w, leaf_h));
     }
-
   }
 
   private void drawTrunk(GL2 gl)
