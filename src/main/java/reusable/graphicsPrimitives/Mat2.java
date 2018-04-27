@@ -75,12 +75,4 @@ public class Mat2
 	{
 		return "[[" + a11 + ", " + a12 + "], [" + a21 + ", " + a22 + "]]";
 	}
-	
-	public static void main (String[] args) 
-	{
-		Mat2 multiplier = new Mat2(0.6, 0.3, 0.4, 0.7);
-		Mat2 multiplicand = new Mat2(0.6, 0.3, 0.4, 0.7);
-		System.out.println(multiply(multiplier, multiplicand));
-		
-	}
 }
