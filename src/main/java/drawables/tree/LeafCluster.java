@@ -1,36 +1,44 @@
 package drawables.tree;
 
+import java.awt.geom.*;
+import java.util.*;
 import javax.media.opengl.*;
 
 import drawables.Drawable;
+import drawables.Shape;
 
 //******************************************************************************
 
 /**
- * A class for describing and drawing a rectangular leaf cluster inspired by
- * Super Paper Mario tree design.
+ * The <CODE>LeafCluster</CODE> class.<P>
  *
  * @author ryanabrowning
  */
-public final class LeafCluster implements Drawable
+public final class LeafCluster implements Drawable, Shape
 {
-  private double x;                // x-coordinate of upper left corner of leaf cluster
-  private double y;                // y-coordinate of upper left corner of leaf cluster
-  private double w;                // width of leaf cluster
-  private double h;                // height of leaf cluster
+  private static final int NUM_SIDES = 6;
+
+  private double cx;               // x-coordinate of center of leaf cluster
+  private double cy;               // y-coordinate of center of leaf cluster
+  private double radius;           // radius of leaf cluster
+
+  private ArrayList<Point2D.Double> vertices; // vertices of leaf cluster
 
   private float r;              // red color value
   private float g;              // green color value
   private float b;              // blue color value
   private float alpha = 0.60f;  // default transparency
 
+  //****************************************************************************
+
   // Constructors
-  public LeafCluster(double x, double y, double w, double h)
+  public LeafCluster(double cx, double cy, double radius)
   {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    this.cx = cx;
+    this.cy = cy;
+    this.radius = radius;
+
+    calculateVertices();
 
     // Default green
     r = 0.32f;
@@ -38,17 +46,18 @@ public final class LeafCluster implements Drawable
     b = 0.40f;
   }
 
-  public LeafCluster(double x, double y, double w, double h, float r, float g, float b)
+  public LeafCluster(double cx, double cy, double radius, float r, float g, float b)
   {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    this.cx = cx;
+    this.cy = cy;
+    this.radius = radius;
 
     this.r = r;
     this.g = g;
     this.b = b;
   }
+
+  //****************************************************************************
 
   public void setColor(float r, float g, float b)
   {
@@ -57,30 +66,64 @@ public final class LeafCluster implements Drawable
     this.b = b;
   }
 
-  public void draw(GL2 gl)
+  //****************************************************************************
+
+  private void calculateVertices()
   {
-    // Fill leaf cluster
-    gl.glBegin(GL2.GL_QUADS);
+    vertices = new ArrayList<Point2D.Double>();
+
+    double theta = Math.PI / 2;
+    double delta = 2 * Math.PI / NUM_SIDES;
+
+    for (int i = 0; i < NUM_SIDES; i++)
+    {
+      double px = cx + radius * Math.cos(theta);
+      double py = cy + radius * Math.sin(theta);
+      vertices.add(new Point2D.Double(px, py));
+
+      theta += delta;
+    }
+  }
+
+  private void fillLeafCluster(GL2 gl)
+  {
+    gl.glBegin(GL2.GL_POLYGON);
     gl.glColor4f(r, g, b, alpha);
 
-    // Draw vertices clockwise starting from upper left corner
-    gl.glVertex2d(x, y);  // upper left corner
-    gl.glVertex2d(x + w, y);
-    gl.glVertex2d(x + w, y + h);
-    gl.glVertex2d(x, y + h);
+    for (Point2D.Double vertex : vertices)
+    {
+      gl.glVertex2d(vertex.x, vertex.y);
+    }
 
     gl.glEnd();
+  }
 
-    // Outline leaf cluster
+  private void outlineLeafCluster(GL2 gl)
+  {
     gl.glBegin(GL.GL_LINE_LOOP);
     gl.glColor4f(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
-    // Draw vertices clockwise starting from upper left corner
-    gl.glVertex2d(x, y);  // upper left corner
-    gl.glVertex2d(x + w, y);
-    gl.glVertex2d(x + w, y + h);
-    gl.glVertex2d(x, y + h);
+    for (Point2D.Double vertex : vertices)
+    {
+      gl.glVertex2d(vertex.x, vertex.y);
+    }
 
     gl.glEnd();
+  }
+
+  //****************************************************************************
+
+  @Override
+  public void draw(GL2 gl)
+  {
+    fillLeafCluster(gl);
+    outlineLeafCluster(gl);
+  }
+
+  @Override
+  public boolean containsPoint(double x, double y)
+  {
+    // TODO Auto-generated method stub
+    return false;
   }
 }
