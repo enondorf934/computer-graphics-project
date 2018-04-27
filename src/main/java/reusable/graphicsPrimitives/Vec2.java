@@ -1,34 +1,33 @@
 package reusable.graphicsPrimitives;
+import java.util.ArrayList;
+
+import dem.geometry.LooseEquivalence;
 import reusable.graphicsPrimitives.Vec3;
 
 /*!
 \author David "Dawn" Estes McKnight
 \date 21 February 2017
-\version 3
-Vector is a class for storing (x,y) information. Supports operations with other vectors and with matrices.
+\version 3`,y) information. Supports operations with other vectors and with matrices.
 */
 
 /**
  * Vector is a class for storing (x,y,z) coordinate information. Supports operations with other vectors.
  * @author DEMcKnight
- *
  */
 public class Vec2
 {
 	
 	//Static variables 
-	
-	public static Vec2 Zero = new Vec2(0,0); 	//(0,0)
-	public static Vec2 Left = new Vec2(-1,0); 	//(-1, 0)
-	public static Vec2 Right = new Vec2(1,0); 	//(1, 0)
-	public static Vec2 Up = new Vec2(0,1); 		//(0, 1)
-	public static Vec2 Down = new Vec2(0,-1); 	//(0, -1)
-	public static Vec2 Unit = new Vec2(1, 1); 	//(1, 1)	
+	public static final Vec2 Zero = new Vec2(0,0); 	//(0,0)
+	public static final Vec2 Left = new Vec2(-1,0); 	//(-1, 0)
+	public static final Vec2 Right= new Vec2(1,0); 	//(1, 0)
+	public static final Vec2 Up  	= new Vec2(0,1); 	//(0, 1)
+	public static final Vec2 Down = new Vec2(0,-1); 	//(0, -1)
+	public static final Vec2 Unit = new Vec2(1, 1); 	//(1, 1)	
 	
 	//Instance variables
-	
-	protected double x;
-	protected double y;
+	public double x;
+	public double y;
 	
 	//Constructor(s)
 	
@@ -61,8 +60,7 @@ public class Vec2
 		this.y=coords[0];
 	}
 
-	//Getters
-	
+	//Getters	
 	/**
 	 * Getter for x
 	 * @return x
@@ -109,6 +107,15 @@ public class Vec2
 		this.y=otherVec.y;
 	}
 	
+	/**
+	 * Returns a deep copy of this vector
+	 * @return a deep copy of this vector
+	 */
+	public Vec2 makeCopy()
+	{
+		return new Vec2(x, y);
+	}
+	
 
 	//Unary Operators
 
@@ -119,6 +126,18 @@ public class Vec2
 	public Vec2 additiveInverse ()
 	{
 		return new Vec2(-x, -y);
+	}
+	
+	/**
+	 * Returns a rotated form of the original vector given the angle to rotate by in radians.
+	 * @param radians
+	 * @return A rotated form of the original vector
+	 */
+	public Vec2 rotated(double radians)
+	{	
+		double newX = Math.cos(radians)*x-Math.sin(radians)*y;
+		double newY = Math.sin(radians)*x+Math.cos(radians)*y;
+		return new Vec2(newX, newY);
 	}
 
 	/**
@@ -261,6 +280,15 @@ public class Vec2
 	{
 		return "(" + this.getX() + ", " + this.getY() + ")";
 	}
+	
+	/**
+	 * Returns the angle from the positive x-axis of this vector
+	 * @return the angle from the positive x-axis of this vector
+	 */
+	public double getAngle()
+	{
+		return Math.atan2(y, x);
+	}
 
 	/**
 	 * Dot product. Returns the dot product of this vector and the given multiplicand.
@@ -330,6 +358,22 @@ public class Vec2
 	{
 		return (this.subtract(otherVec)).magnitude();
 	}
+	
+	/**
+	 * Returns the distance from the point represented by this vector to the line spanned by the given parameter vectors
+	 * @param point1 a point on the line to which we're finding the distance
+	 * @param point2 another (distinct) point on the line to which we're finding the distance
+	 * @return the distance from the point represented by this vector to the line spanned by the given parameter vectors
+	 */
+	public double distanceToLine(Vec2 point1, Vec2 point2)
+	{
+		Vec2 p12 = point2.subtract(point1);
+		Vec2 p01 = point1.subtract(this);
+		double det = p12.getX()*p01.getY() - p12.getY() * p01.getX();
+		det/=p12.getX();
+		return det<0? - det : det;
+	}
+
 
 	/**
 	 * Returns the (signed) angle from this vector to another vector as if their tails were touching.
@@ -338,7 +382,7 @@ public class Vec2
 	 */
 	public double angleTo(Vec2 otherVec)
 	{
-		return Math.acos(dot(otherVec, this) / (this.magnitude() * otherVec.magnitude()));
+		return Math.atan2(otherVec.y, otherVec.x) - Math.atan2(y,x);
 	}
 	
 	//Static versions of some of the above methods.
@@ -410,6 +454,7 @@ public class Vec2
 	{
 		return firstVector.distanceTo(secondVector);
 	}
+	
 
 	/**
 	 * Returns the (signed) angle between two vectors as if their tails were touching.
@@ -420,5 +465,99 @@ public class Vec2
 	public static double angleBetween(Vec2 firstVector, Vec2 secondVector)
 	{
 		return firstVector.angleTo(secondVector);
+	}
+
+	/**
+	 * Returns the closest point on the line spanned by l1 and l2 to the given point
+	 * @param point the point to which we're finding the closest point on the line
+	 * @param l1 one end of the line segment
+	 * @param l2 the other end of the line segment
+	 * @return the closest point on the line spanned by l1 and l2 to the given point
+	 */
+	public static Vec2 closestPointOnLine(Vec2 point, Vec2 l1, Vec2 l2)
+	{
+		
+		//vector from l1 to l2
+		Vec2 lineVector = l2.subtract(l1);
+		
+		//vector from l1 to point
+		Vec2 segEndToPoint = point.subtract(l1);
+		
+		//get scalar projection amount
+		double scalProj = Vec2.dot(segEndToPoint, lineVector)/lineVector.magnitude();
+		
+		//get ortho projection vector
+		Vec2 orthogonalProj = lineVector.normalized().multiply(scalProj);
+		
+		//add projection vector to original point
+		return l1.add(orthogonalProj);
+	}
+	
+	
+	/**
+	 * Returns true if the given point is on the line segment spanned by l1 and l2; false, otherwise.
+	 * @param point the point being tested to see if it's on the given line segment
+	 * @param l1 one end of the line segment
+	 * @param l2 one end of the line segment
+	 * @return true if the given point is on the line segment spanned by l1 and l2; false, otherwise.
+	 */
+	public static boolean isOnLineSegment(Vec2 point, Vec2 l1, Vec2 l2)
+	{
+		//Get distances from point to segement ends
+		double distTo1 = point.distanceTo(l1);
+		double distTo2 = point.distanceTo(l2);
+			
+		//If the sum of those distances isn't the length of the line segment
+		if (!LooseEquivalence.IsEqual(distTo1+distTo2, l1.distanceTo(l2)))
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Finds the closest point to the given point on the line segment from l1 to l2 
+	 * @param point
+	 * @param l1 the first bound of the line segment
+	 * @param l2 the second bound of the line segment
+	 * @return the closest point to the given point on the line segment from l1 to l2 
+	 */
+	public static Vec2 closestPointOnLineSegment(Vec2 point, Vec2 l1, Vec2 l2)
+	{
+		Vec2 supposedClosestPoint = closestPointOnLine(point, l1, l2);
+		
+		//Check to see if point is not on line segment
+		double distTo1 = supposedClosestPoint.distanceTo(l1);
+		double distTo2 = supposedClosestPoint.distanceTo(l2);
+		
+		if (!LooseEquivalence.IsEqual(distTo1+distTo2, l1.distanceTo(l2)))
+		{
+			return distTo1<distTo2 ? l1.makeCopy() : l2.makeCopy();
+		}
+			
+		return supposedClosestPoint;
+	}
+	
+	/**
+	 * Finds the closest point on the polygon from the given point
+	 * @param point the point to which the closest point on the polygon is being found
+	 * @param corners the vertices of the polygon	
+	 * @return the closest point on the polygon from the given point
+	 */
+	public static Vec2 closestPointOnPolygon(Vec2 point, ArrayList<Vec2> corners)
+	{
+		double closestDist = Double.POSITIVE_INFINITY;
+		Vec2 closestPoint = null;
+		for (int i=0; i<corners.size(); i++)
+		{
+			Vec2 closestPointToSeg = closestPointOnLineSegment(point, corners.get(i), corners.get((i+1)%corners.size()));
+			double distance = point.distanceTo(closestPointToSeg);
+			if (distance<closestDist)
+			{
+				closestPoint = closestPointToSeg;
+				closestDist = distance;
+			}
+		}
+		return closestPoint;
 	}
 }
