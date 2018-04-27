@@ -1,5 +1,6 @@
 package drawables.tree;
 
+import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 import javax.media.opengl.*;
@@ -18,15 +19,19 @@ public final class LeafCluster implements Drawable, Shape
 {
   private static final int NUM_SIDES = 6;
 
+  private static final float HUE = 133.37f;
+  private static final float SATURATION = 0.53f;
+  private static final float BRIGHTNESS = 0.68f;
+
   private double cx;               // x-coordinate of center of leaf cluster
   private double cy;               // y-coordinate of center of leaf cluster
   private double radius;           // radius of leaf cluster
 
   private ArrayList<Point2D.Double> vertices; // vertices of leaf cluster
 
-  private float r;              // red color value
-  private float g;              // green color value
-  private float b;              // blue color value
+  private float h;              // hue component of the color
+  private float s;              // saturation component of the color
+  private float b;              // brightness component of the color
   private float alpha = 0.60f;  // default transparency
 
   //****************************************************************************
@@ -41,28 +46,19 @@ public final class LeafCluster implements Drawable, Shape
     calculateVertices();
 
     // Default green
-    r = 0.32f;
-    g = 0.68f;
-    b = 0.40f;
+    h = HUE;
+    s = SATURATION;
+    b = BRIGHTNESS;
   }
 
-  public LeafCluster(double cx, double cy, double radius, float r, float g, float b)
+  public LeafCluster(double cx, double cy, double radius, float h, float s, float b)
   {
     this.cx = cx;
     this.cy = cy;
     this.radius = radius;
 
-    this.r = r;
-    this.g = g;
-    this.b = b;
-  }
-
-  //****************************************************************************
-
-  public void setColor(float r, float g, float b)
-  {
-    this.r = r;
-    this.g = g;
+    this.h = h;
+    this.s = s;
     this.b = b;
   }
 
@@ -85,10 +81,24 @@ public final class LeafCluster implements Drawable, Shape
     }
   }
 
+  private void generateRandomColor()
+  {
+    //HSB, B between 50 and 70
+  }
+
+  private void setColor(GL2 gl)
+  {
+    // Convert color components from HSB to RGB
+    Color rgb = new Color(Color.HSBtoRGB(h, s, b));
+
+    // Use RGB components to set color
+    gl.glColor4f(rgb.getRed()/255.f, rgb.getGreen()/255.0f, rgb.getBlue()/255.0f, alpha);
+  }
+
   private void fillLeafCluster(GL2 gl)
   {
     gl.glBegin(GL2.GL_POLYGON);
-    gl.glColor4f(r, g, b, alpha);
+    setColor(gl);
 
     for (Point2D.Double vertex : vertices)
     {
