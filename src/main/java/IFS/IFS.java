@@ -34,7 +34,7 @@ public class IFS
 	 * Constructs a new Iterated Function System that uses the given matrices and addends to transform the current coordinates each frame.
 	 * 
 	 * @param matrices The transformations to apply prior to translating by the corresponding addend when iterate() is called.
-	 * @param addends The translation transformations to apply after applying hte corresponding matrix transformation when iterate() is called.
+	 * @param addends The translation transformations to apply after applying the corresponding matrix transformation when iterate() is called.
 	 */
 	public IFS(List<Mat2> matrices, List<Vec2> addends)
 	{
