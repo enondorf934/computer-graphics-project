@@ -149,7 +149,7 @@ public final class UnitTree implements Drawable, Shape
       double leaf_x = (max_x - x) * r.nextDouble() + x;
       double leaf_y = (max_y - min_y) * r.nextDouble() + min_y;
 
-      leafClusters.add(new LeafCluster(leaf_x, leaf_y, leaf_w, leaf_h));
+      leafClusters.add(new LeafCluster(leaf_x, leaf_y, leafWidth, leafHeight));
     }
   }
 
