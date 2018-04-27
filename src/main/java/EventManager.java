@@ -48,19 +48,19 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private static int screenWidth = 1920;
 	private static int screenHeight = 1080;
-	
+
 	private static double actualScaleY = 0;
 
 	private static int horizon = 275;
 	private static int mountainHorizon = horizon - 2;
 
 	private static int lowestCloudLevel = horizon + 325;
-	
+
 	private static boolean drawWinter = false;
 
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
-	
-	private static 
+
+	private static
 
 
 
@@ -75,21 +75,21 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
-	
+
 	public static RegularPolygon theSun = new RegularPolygon(new Vec2(1920*.9, 1080*.9), 0, 70, 30);
-	
+
 	// FIXME
 	public static UnitTree tree = new UnitTree();
-	
+
 	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
 	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 	public static DrawableIFS ifs;
-	
+
 	public static DrawableIFS groundIFS;
-	
+
 	public static SnowFlurry flurry;
-	
+
 	public static boolean seasonChanged = false;
 
 	public static boolean isFirstRender = true;
@@ -109,7 +109,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		
+
 		update();
 		updateProjectionMatrix(drawable);
 
@@ -117,8 +117,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			renderSummer(drawable);
 		else
 			renderWinter(drawable);
-		
-		
+
+
 	}
 
 	private void updateCloudsCounter()
@@ -126,8 +126,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		counter++;
 	}
 	private void update()
-	{			
-		
+	{
+
 		if (seasonChanged)
 		{
 			if (!drawWinter)
@@ -136,7 +136,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				initWinter();
 			seasonChanged =false;
 		}
-		
+
 		//If it's summer
 		if (!drawWinter)
 		{
@@ -146,10 +146,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			}
 			updateClouds(counter, screenWidth);
 		}
-		
+
 		//If it's winter
 		if(drawWinter)
-		{	
+		{
 			for (int i=0; i<10; i++)
 			{
 				ifs.iterate();
@@ -174,12 +174,12 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			scaleY = scaleX;
 		else
 			scaleX = scaleY;
-		
+
 		actualScaleY = scaleY;
 
-		
 
-		
+
+
 
 		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)*scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)*scaleY, 0, 1);
 
@@ -210,14 +210,14 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		screenWidth = width;
 		screenHeight = height;
 	}
-	
-	
+
+
 	public static void initSummer()
 	{
 		initializeMountains();
 		initializeClouds();
 	}
-	
+
 	public static void initWinter()
 	{
 		//Prepare IFS coords
@@ -227,31 +227,31 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		matrices.add(new Mat2(-0.637,0,0,0.501));
 		matrices.add(new Mat2(-0.035,0.07,-0.469,0.022));
 		matrices.add(new Mat2(-0.058,-0.07,0.453,-0.111));
-		
+
 		ArrayList<Vec2> vertices = new ArrayList<Vec2>();
 		vertices.add(new Vec2(0.4431,0.2452));
 		vertices.add(new Vec2(0.2511,0.5692));
 		vertices.add(new Vec2(0.8562,0.2512));
 		vertices.add(new Vec2(0.4884,0.5069));
 		vertices.add(new Vec2(0.5976,0.0969));
-		
+
 		//Prepare the IFS and the snowflurry
 		ifs = new DrawableIFS(new Vec2(0, horizon*0.9), 500, 500, matrices, vertices);
-		
+
 		ArrayList<Mat2> groundMats = new ArrayList<Mat2>();
 		groundMats.add(new Mat2(0.5,0,0,0.5));
 		groundMats.add(new Mat2(0.5,0,0,0.5));
 		groundMats.add(new Mat2(0.5,0,0,0.5));
 		groundMats.add(new Mat2(0.5,0,0,0.5));
-			
+
 		ArrayList<Vec2> groundVecs = new ArrayList<Vec2>();
 		groundVecs.add(new Vec2(0,0));
 		groundVecs.add(new Vec2(0.5,0));
 		groundVecs.add(new Vec2(0,0.5));
 		groundVecs.add(new Vec2(0.5,0.5));
-		
+
 		groundIFS = new DrawableIFS(new Vec2(0, 0), virtualWidth, horizon, groundMats, groundVecs);
-		
+
 		flurry = new SnowFlurry(0, virtualWidth, 0, virtualHeight, 1/3.0);
 	}
 
@@ -292,7 +292,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(10, mountainHorizon, 100, 60));
 		mountains.add(new Mountain(50, mountainHorizon, 40, 60));
 	}
-	
+
 
 	//Actually does the rendering
 	public static void renderSummer(GLAutoDrawable drawable)
@@ -304,7 +304,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		//Draw the ground
 		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 0, horizon-1);
-		
+
 		//Draw the sun
 		Helpers.setColor(gl, Color.YELLOW);
 		Helpers.drawPolygon(gl, theSun.boundaryPoints);
@@ -318,32 +318,46 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		// Transform and draw the tree
 		gl.glPushMatrix(); // Copy the CT for local changes
 		gl.glTranslated((virtualWidth - tree.getWidth()) / 2, horizon, 0.0);
-		Drawers.drawTree(gl, tree);
+		Drawers.drawTreeTrunk(gl, tree);
+		drawLeafClusters(gl);
 		gl.glPopMatrix();	// Restore the CT from before
 	}
-	
+
+	private static void drawLeafClusters(GL2 gl)
+	{
+		gl.glPushMatrix();	// Copy the CT for local changes
+		gl.glTranslated(0.0, 0.0, 0.0);
+
+		for (LeafCluster leafCluster : tree.getLeafClusters())
+		{
+			leafCluster.draw(gl);
+		}
+
+		gl.glPopMatrix();		// Restore the CT from before
+	}
+
 	public static void renderWinter(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
-		
+
 		//Cover the screen with blackness
 		Drawers.drawGroundRect(gl, Color.BLACK, Color.BLACK, 0, 1920, 0, 1080);
-		
+
 		//Draw the moon
 		Helpers.setColor(gl, Color.WHITE);
 		Helpers.drawPolygon(gl, theSun.boundaryPoints);
-		
+
 		//We'll draw most of the flakes white
 		Helpers.setColor(gl, Color.WHITE);
-		
+
 		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glTranslated(670, 0, 0);
 		ifs.draw(gl);
 		gl.glPopMatrix();
-		
+
 		groundIFS.draw(gl);
-		
+
 		flurry.draw(gl);
 	}
 	public static void updateClouds(int counter, int screenWidth)
