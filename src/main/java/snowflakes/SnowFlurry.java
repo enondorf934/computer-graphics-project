@@ -16,10 +16,11 @@ public class SnowFlurry
 	//Snowflurry boundaries (defines where snowflakes begin and disappear
 	public double minX;
 	public double maxX;
+	public double disY;
 	public double minY;
 	public double maxY;
 	
-	private double lowestY = 0;
+	private double lowestY = Double.POSITIVE_INFINITY;
 	public double getLowestY() {return lowestY;};
 	
 	//How often snowflakes should occur
@@ -37,10 +38,11 @@ public class SnowFlurry
 	 * @param maxY
 	 * @param flakeOccurrence Probability a new snowflake should appear at each frame
 	 */
-	public SnowFlurry(double minX, double maxX, double minY, double maxY, double flakeOccurrence) 
+	public SnowFlurry(double minX, double maxX, double disY, double minY, double maxY, double flakeOccurrence) 
 	{
 		this.minX = minX;
 		this.minY = minY;
+		this.disY = disY;
 		this.maxX = maxX;
 		this.maxY = maxY;
 		
@@ -81,7 +83,21 @@ public class SnowFlurry
 			s.update(timestep);
 			
 			//if its position is too high or too low, remove it
-			Vec2 pos = s.getPosition();	
+			Vec2 pos = s.getPosition();
+			
+			if (pos.getY() < lowestY)
+				lowestY = pos.getY();
+			
+			
+			if (pos.getY()<disY)
+			{
+				if (randy.nextDouble()<0.002)
+				{
+					snowflakes.remove(i);
+					i--;
+				}
+			}
+			
 			if (pos.getY()<minY || pos.getY() > maxY)
 			{
 				snowflakes.remove(i);
