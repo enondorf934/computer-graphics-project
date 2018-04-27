@@ -467,7 +467,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	/**
 	 * Updates the clouds for the summer scene
 	 * @param counter
-	 * @param screenWidth
 	 */
 	public static void updateClouds(int counter)
 	{

@@ -1,15 +1,12 @@
 package snowflakes;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
 import geometry.RegularPolygon;
-import reusable.graphicsPrimitives.Vec2;
 import reusable.Helpers;
+import reusable.graphicsPrimitives.Vec2;
 
 /**
  * Prepares a modified version of the nflake fractal
