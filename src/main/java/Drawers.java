@@ -55,6 +55,11 @@ public class Drawers
 		tree.draw(gl);
 	}
 
+	public static void drawTreeTrunk(GL2 gl, UnitTree tree)
+	{
+		tree.drawTrunk(gl);
+	}
+
 	public static void drawMountains(GL2 gl, ArrayList<Mountain> mountains)
 	{
 		for(Mountain mountain : mountains) {
