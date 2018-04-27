@@ -84,6 +84,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 	public static DrawableIFS ifs;
 	public static SnowFlurry flurry;
+	
+	public static boolean seasonChanged = false;
 
 	public static boolean isFirstRender = true;
 
@@ -119,7 +121,17 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		counter++;
 	}
 	private void update()
-	{
+	{			
+		
+		if (seasonChanged)
+		{
+			if (!drawWinter)
+				initSummer();
+			else
+				initWinter();
+			seasonChanged =false;
+		}
+		
 		//If it's summer
 		if (!drawWinter)
 		{
@@ -132,7 +144,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		
 		//If it's winter
 		if(drawWinter)
-		{
+		{	
 			for (int i=0; i<10; i++)
 			{
 				ifs.iterate();
@@ -175,8 +187,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	@Override
 	public void init(GLAutoDrawable canvas)
 	{
-		initializeMountains();
-		initializeClouds();
+		initSummer();
 		initWinter();
 	}
 
@@ -186,6 +197,35 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	{
 		screenWidth = width;
 		screenHeight = height;
+	}
+	
+	
+	public static void initSummer()
+	{
+		initializeMountains();
+		initializeClouds();
+	}
+	
+	public static void initWinter()
+	{
+		//Prepare IFS coords
+		ArrayList<Mat2> matrices = new ArrayList<Mat2>();
+		matrices.add(new Mat2(0.195,-0.488,0.344,0.443));
+		matrices.add(new Mat2(0.462,0.414,-0.252,0.361));
+		matrices.add(new Mat2(-0.637,0,0,0.501));
+		matrices.add(new Mat2(-0.035,0.07,-0.469,0.022));
+		matrices.add(new Mat2(-0.058,-0.07,0.453,-0.111));
+		
+		ArrayList<Vec2> vertices = new ArrayList<Vec2>();
+		vertices.add(new Vec2(0.4431,0.2452));
+		vertices.add(new Vec2(0.2511,0.5692));
+		vertices.add(new Vec2(0.8562,0.2512));
+		vertices.add(new Vec2(0.4884,0.5069));
+		vertices.add(new Vec2(0.5976,0.0969));
+		
+		//Prepare the IFS and the snowflurry
+		ifs = new DrawableIFS(matrices, vertices);
+		flurry = new SnowFlurry(0, virtualWidth, 0, virtualHeight, 1/3.0);
 	}
 
 	public static void initializeClouds()
@@ -226,27 +266,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(50, mountainHorizon, 40, 60));
 	}
 	
-	public static void initWinter()
-	{
-		//Prepare IFS coords
-		ArrayList<Mat2> matrices = new ArrayList<Mat2>();
-		matrices.add(new Mat2(0.195,-0.488,0.344,0.443));
-		matrices.add(new Mat2(0.462,0.414,-0.252,0.361));
-		matrices.add(new Mat2(-0.637,0,0,0.501));
-		matrices.add(new Mat2(-0.035,0.07,-0.469,0.022));
-		matrices.add(new Mat2(-0.058,-0.07,0.453,-0.111));
-		
-		ArrayList<Vec2> vertices = new ArrayList<Vec2>();
-		vertices.add(new Vec2(0.4431,0.2452));
-		vertices.add(new Vec2(0.2511,0.5692));
-		vertices.add(new Vec2(0.8562,0.2512));
-		vertices.add(new Vec2(0.4884,0.5069));
-		vertices.add(new Vec2(0.5976,0.0969));
-		
-		//Prepare the IFS and the snowflurry
-		ifs = new DrawableIFS(matrices, vertices);
-		flurry = new SnowFlurry(0, virtualWidth, 0, virtualHeight, 1/3.0);
-	}
 
 	//Actually does the rendering
 	public static void renderSummer(GLAutoDrawable drawable)
@@ -380,7 +399,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	{
 		updateMousePosition(e);
 		if (IntersectionOps.isPointInsidePoly(new Vec2(mousePosition.getX(), mousePosition.getY()), theSun.boundaryPoints))
+		{
 			drawWinter = !drawWinter;
+			seasonChanged = true;
+		}
 	}
 
 	@Override

@@ -19,6 +19,9 @@ public class SnowFlurry
 	public double minY;
 	public double maxY;
 	
+	private double lowestY = 0;
+	public double getLowestY() {return lowestY;};
+	
 	//How often snowflakes should occur
 	public double flakeOccurrence = 0.5;
 	Random randy = new Random();
@@ -50,7 +53,6 @@ public class SnowFlurry
 	{
 		snowflakes = new ArrayList<Snowflake>();
 	}
-	
 	
 	public void iterate(double timestep)
 	{
