@@ -81,7 +81,11 @@ public class SnowFlurry
 			s.update(timestep);
 			
 			//if its position is too high or too low, remove it
-			Vec2 pos = s.getPosition();	
+			Vec2 pos = s.getPosition();
+			
+			if (pos.getY() < lowestY)
+				lowestY = pos.getY();
+			
 			if (pos.getY()<minY || pos.getY() > maxY)
 			{
 				snowflakes.remove(i);
