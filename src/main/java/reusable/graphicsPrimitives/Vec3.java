@@ -22,7 +22,6 @@ public class Vec3
 	protected double z;
 
 	//Constructor(s)
-	
 	/**
 	 * Constructs a Vec3 object with the given x and y parameters. Sets z to 0.
 	 * @param x	The x-coordinate.
@@ -112,7 +111,6 @@ public class Vec3
 	}
 
 	//Unary Operators
-
 	/**
 	 * Returns a vector with its x, y, and z parameters holding the additive inverses of this vector's x, y, and z values
 	 * @return a vector with x, y, and z parameters additive inverses of this vector's.
@@ -122,7 +120,7 @@ public class Vec3
 		return new Vec3(-x, -y, -z);
 	}
 
-	//Binary operators    '
+	//Binary operators
 	
 	//Addition operators.
 	/**
