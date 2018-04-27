@@ -8,11 +8,26 @@ import javax.media.opengl.GL;
 import reusable.graphicsPrimitives.Vec2;
 import reusable.Helpers;
 
+/**
+ * Prepares a Koch Snowflake object for drawing into a winter scene
+ * @author DEMcKnight
+ *
+ */
 public class KochSnowflake extends Snowflake
 {
 	
+	/**
+	 * The coordinates of this Koch Snowflake's vertices at the current number of generations
+	 */
 	public ArrayList<Vec2> coordinates;
 
+	/**
+	 * Prepares a KochSnowflake with position and angle being handled by the superclass Snowflake. 
+	 * @param position The position to draw this KochSnowflake on a given GL object when draw is called
+	 * @param radius The overall circumradius of this Koch Snowflake
+	 * @param angle The angle at which to draw this Snowflake
+	 * @param numGenerations The number of times to iterate KochSnowflake applying the rewrite rules
+	 */
 	public KochSnowflake(Vec2 position, double radius, double angle, int numGenerations)
 	{
 		super(position, angle);
@@ -24,7 +39,11 @@ public class KochSnowflake extends Snowflake
 		}	
 	}
 	
-	
+	/**
+	 * Advances the generation, applying the production rule for the Koch Snowflake
+	 * @param radius The overall radius of this Koch Snowflake
+	 * @param genNumber The number of generations remaining to continue recursively calling anotherLayer
+	 */
 	public void anotherLayer(double radius, int genNumber)
 	{
 		if (genNumber == 0)

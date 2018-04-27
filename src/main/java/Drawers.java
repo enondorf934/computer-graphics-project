@@ -1,19 +1,19 @@
 
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import drawables.CloudCluster;
+import drawables.Mountain;
 import drawables.tree.UnitTree;
 import reusable.Helpers;
-import drawables.Cloud;
-import drawables.Mountain;
-import drawables.CloudCluster;
 
+/**
+ * Class with methods for drawing things in our Tree project
+ *
+ */
 public class Drawers
 {
 
