@@ -83,6 +83,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	{
 		GL2 gl = drawable.getGL().getGL2();
 
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		
 		update();
 		updateProjectionMatrix(drawable);
 
@@ -95,10 +98,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	}
 	private void update()
 	{
+		
 		if(isCloudMoving)
 		{
 			updateCloudsCounter();
-
 		}
 		updateClouds(counter, screenWidth);
 	}
