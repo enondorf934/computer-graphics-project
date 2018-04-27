@@ -213,7 +213,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		// Transform and draw the tree
 		gl.glPushMatrix(); // Copy the CT for local changes
 		gl.glTranslated((virtualWidth - tree.getWidth()) / 2, horizon, 0.0);
-		Drawers.drawTree(gl, theTree, tree);
+		Drawers.drawTree(gl, tree);
 		gl.glPopMatrix();	// Restore the CT from before
 	}
 
