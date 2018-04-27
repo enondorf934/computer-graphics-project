@@ -85,6 +85,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
 	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
 	public static DrawableIFS ifs;
+	
+	public static DrawableIFS groundIFS;
+	
 	public static SnowFlurry flurry;
 	
 	public static boolean seasonChanged = false;
@@ -150,6 +153,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			for (int i=0; i<10; i++)
 			{
 				ifs.iterate();
+				groundIFS.iterate();
 			}
 			flurry.iterate(1/60.0);
 		}
@@ -232,7 +236,22 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		vertices.add(new Vec2(0.5976,0.0969));
 		
 		//Prepare the IFS and the snowflurry
-		ifs = new DrawableIFS(matrices, vertices);
+		ifs = new DrawableIFS(new Vec2(0, horizon*0.9), 500, 500, matrices, vertices);
+		
+		ArrayList<Mat2> groundMats = new ArrayList<Mat2>();
+		groundMats.add(new Mat2(0.5,0,0,0.5));
+		groundMats.add(new Mat2(0.5,0,0,0.5));
+		groundMats.add(new Mat2(0.5,0,0,0.5));
+		groundMats.add(new Mat2(0.5,0,0,0.5));
+			
+		ArrayList<Vec2> groundVecs = new ArrayList<Vec2>();
+		groundVecs.add(new Vec2(0,0));
+		groundVecs.add(new Vec2(0.5,0));
+		groundVecs.add(new Vec2(0,0.5));
+		groundVecs.add(new Vec2(0.5,0.5));
+		
+		groundIFS = new DrawableIFS(new Vec2(0, 0), virtualWidth, horizon, groundMats, groundVecs);
+		
 		flurry = new SnowFlurry(0, virtualWidth, 0, virtualHeight, 1/3.0);
 	}
 
@@ -322,6 +341,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		gl.glTranslated(670, 0, 0);
 		ifs.draw(gl);
 		gl.glPopMatrix();
+		
+		groundIFS.draw(gl);
 		
 		flurry.draw(gl);
 	}
