@@ -17,11 +17,16 @@ import drawables.Shape;
  */
 public final class LeafCluster implements Drawable, Shape
 {
+  private static final Random random = new Random();
+
   private static final int NUM_SIDES = 6;
 
   private static final float HUE = 133.37f;
   private static final float SATURATION = 0.53f;
   private static final float BRIGHTNESS = 0.68f;
+
+  private static final float MIN_BRIGHTNESS = 0.50f;
+  private static final float MAX_BRIGHTNESS = 0.80f;
 
   private double cx;               // x-coordinate of center of leaf cluster
   private double cy;               // y-coordinate of center of leaf cluster
@@ -44,11 +49,7 @@ public final class LeafCluster implements Drawable, Shape
     this.radius = radius;
 
     calculateVertices();
-
-    // Default green
-    h = HUE;
-    s = SATURATION;
-    b = BRIGHTNESS;
+    generateRandomColor();
   }
 
   public LeafCluster(double cx, double cy, double radius, float h, float s, float b)
@@ -83,7 +84,12 @@ public final class LeafCluster implements Drawable, Shape
 
   private void generateRandomColor()
   {
-    //HSB, B between 50 and 70
+    // Set hue and saturation components to default values
+    h = HUE;
+    s = SATURATION;
+
+    // Generate random brightness component within range
+    b = (MAX_BRIGHTNESS - MIN_BRIGHTNESS) * (float)random.nextDouble() + MIN_BRIGHTNESS;
   }
 
   private void setColor(GL2 gl)
