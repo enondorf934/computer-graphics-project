@@ -1,4 +1,4 @@
-package dem.geometry;
+package geometry;
 
 /**
  * A class for checking for equivalence in a world where doubles and floats don't play nice

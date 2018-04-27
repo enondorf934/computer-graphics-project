@@ -1,7 +1,7 @@
 package reusable.graphicsPrimitives;
 import java.util.ArrayList;
 
-import dem.geometry.LooseEquivalence;
+import geometry.LooseEquivalence;
 import reusable.graphicsPrimitives.Vec3;
 
 /*!
