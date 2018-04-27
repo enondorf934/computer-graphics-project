@@ -13,7 +13,6 @@ import reusable.Helpers;
 public class Cloud implements Drawable, Shape
 {
 
-	public GL2 gl;
     public int cx;
     public int cy;
 	public int height;
@@ -23,9 +22,8 @@ public class Cloud implements Drawable, Shape
 	public float b;
 	public float alpha;
 
-    public Cloud(GL2 gl, int cx, int cy, int height, int width, float r, float g, float b, float alpha)
+    public Cloud(int cx, int cy, int height, int width, float r, float g, float b, float alpha)
     {
-        this.gl = gl;
         this.cx = cx;
         this.cy = cy;
 		this.height = height;

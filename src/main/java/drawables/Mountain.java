@@ -14,7 +14,6 @@ import reusable.Helpers;
 public class Mountain implements Drawable, Shape
 {
 
-    public GL2 gl;
     public int cx;
     public int cy;
 	public int height;
@@ -24,9 +23,8 @@ public class Mountain implements Drawable, Shape
     public float b;
     public float alpha;
 
-    public Mountain(GL2 gl, int cx, int cy,  int height, int width)
+    public Mountain(int cx, int cy,  int height, int width)
     {
-        this.gl = gl;
         this.cx = cx;
         this.cy = cy;
 		this.height = height;

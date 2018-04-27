@@ -86,7 +86,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		update();
 		updateProjectionMatrix(drawable);
 
-		render(drawable);
+		renderSummer(drawable);
 	}
 
 	private void updateCloudsCounter()
@@ -137,8 +137,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	@Override
 	public void init(GLAutoDrawable canvas)
 	{
-		//Prepare the Lorenz attractor information for drawing the galaxy later (this way it's not called every update or reshape)
-
+		initializeMountains();
+		initializeClouds();
 	}
 
 	//Called by the drawable during the first repaint after the component has been resized.
@@ -149,7 +149,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		screenHeight = height;
 	}
 
-	public static void initializeClouds(GL2 gl)
+	public static void initializeClouds()
 	{
 
 		//generate the centers for the clusters and add the cluster to the list
@@ -159,46 +159,38 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			int x = rand.nextInt((1700)+1) + 100;
 			int y = rand.nextInt((200)+1) + lowestCloudLevel;
 
-			cloudClusterList.add(new CloudCluster(gl, x, y, 100, 150, new ArrayList<Cloud>()));
+			cloudClusterList.add(new CloudCluster(x, y, 100, 150, new ArrayList<Cloud>()));
 		}
 	}
 
-	public static void initializeMountains(GL2 gl)
+	public static void initializeMountains()
 	{
-		mountains.add(new Mountain(gl, 500, mountainHorizon, 50, 30));
-		mountains.add(new Mountain(gl, 800, mountainHorizon, 300, 350));
-		mountains.add(new Mountain(gl, 1760, mountainHorizon, 200, 280));
-		mountains.add(new Mountain(gl, 900, mountainHorizon, 200, 250));
-		mountains.add(new Mountain(gl, 1500, mountainHorizon, 180, 200));
-		mountains.add(new Mountain(gl, 1400, mountainHorizon, 160, 140));
-		mountains.add(new Mountain(gl, 1200, mountainHorizon, 100, 120));
-		mountains.add(new Mountain(gl, 1600, mountainHorizon, 90, 100));
-		mountains.add(new Mountain(gl, 1710, mountainHorizon, 75, 50));
-		mountains.add(new Mountain(gl, 1680, mountainHorizon, 50, 30));
-		mountains.add(new Mountain(gl, 1750, mountainHorizon, 40, 30));
-		mountains.add(new Mountain(gl, 875, mountainHorizon, 100, 110));
-		mountains.add(new Mountain(gl, 1000, mountainHorizon, 50, 75));
-		mountains.add(new Mountain(gl, 1050, mountainHorizon, 100, 200));
-		mountains.add(new Mountain(gl, 600, mountainHorizon, 100, 200));
-		mountains.add(new Mountain(gl, 400, mountainHorizon, 150, 200));
-		mountains.add(new Mountain(gl, 75, mountainHorizon, 200, 175));
-		mountains.add(new Mountain(gl, 100, mountainHorizon, 70, 120));
-		mountains.add(new Mountain(gl, 10, mountainHorizon, 100, 60));
-		mountains.add(new Mountain(gl, 50, mountainHorizon, 40, 60));
+		mountains.add(new Mountain(500, mountainHorizon, 50, 30));
+		mountains.add(new Mountain(800, mountainHorizon, 300, 350));
+		mountains.add(new Mountain(1760, mountainHorizon, 200, 280));
+		mountains.add(new Mountain(900, mountainHorizon, 200, 250));
+		mountains.add(new Mountain(1500, mountainHorizon, 180, 200));
+		mountains.add(new Mountain(1400, mountainHorizon, 160, 140));
+		mountains.add(new Mountain(1200, mountainHorizon, 100, 120));
+		mountains.add(new Mountain(1600, mountainHorizon, 90, 100));
+		mountains.add(new Mountain(1710, mountainHorizon, 75, 50));
+		mountains.add(new Mountain(1680, mountainHorizon, 50, 30));
+		mountains.add(new Mountain(1750, mountainHorizon, 40, 30));
+		mountains.add(new Mountain(875, mountainHorizon, 100, 110));
+		mountains.add(new Mountain(1000, mountainHorizon, 50, 75));
+		mountains.add(new Mountain(1050, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(600, mountainHorizon, 100, 200));
+		mountains.add(new Mountain(400, mountainHorizon, 150, 200));
+		mountains.add(new Mountain(75, mountainHorizon, 200, 175));
+		mountains.add(new Mountain(100, mountainHorizon, 70, 120));
+		mountains.add(new Mountain(10, mountainHorizon, 100, 60));
+		mountains.add(new Mountain(50, mountainHorizon, 40, 60));
 	}
 
 	//Actually does the rendering
-	public static void render(GLAutoDrawable drawable)
+	public static void renderSummer(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
-
-		if(isFirstRender)
-		{
-			initializeClouds(gl);
-			initializeMountains(gl);
-
-			isFirstRender = false;
-		}
 
 		//Draw sky background
 		Drawers.drawSkyRect(gl, new Color[]{new Color(2, 125, 254), new Color(82, 192, 255), new Color(188, 245, 255)}, 0, 1920, horizon, 1080);

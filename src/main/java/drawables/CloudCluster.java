@@ -12,14 +12,13 @@ import java.awt.Color;
 public class CloudCluster implements Drawable, Shape
 {
 
-    public GL2 gl;
     public int cx;
     public int cy;
 	public int height;
     public int width;
     public ArrayList<Cloud> clouds;
 
-    public CloudCluster(GL2 gl, int cx, int cy, int height, int width, ArrayList<Cloud> clouds)
+    public CloudCluster(int cx, int cy, int height, int width, ArrayList<Cloud> clouds)
     {
        Random rand = new Random();
 
@@ -42,11 +41,8 @@ public class CloudCluster implements Drawable, Shape
             float b = rand2.nextFloat()/2f + 0.5f;
             float alpha = rand2.nextFloat();
 
-            clouds.add(new Cloud(gl, cloudx, cloudy, cloudHeight, cloudWidth, r, g, b, alpha));
+            clouds.add(new Cloud(cloudx, cloudy, cloudHeight, cloudWidth, r, g, b, alpha));
         }
-
-
-        this.gl = gl;
         this.cx = cx;
         this.cy = cy;
 		this.height = height;
