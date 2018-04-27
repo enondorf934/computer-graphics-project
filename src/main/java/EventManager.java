@@ -49,10 +49,12 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
+
 	public static BasicTree theTree = new BasicTree(960, horizon, 2, 2, new Color(166, 129, 62));
 
 	// FIXME
 	public static UnitTree tree = new UnitTree();
+
 
 	float targetAspectRatio = virtualWidth/virtualHeight;
 
