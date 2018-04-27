@@ -48,6 +48,8 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private static int screenWidth = 1920;
 	private static int screenHeight = 1080;
+	
+	private static double actualScaleY = 0;
 
 	private static int horizon = 275;
 	private static int mountainHorizon = horizon - 2;
@@ -162,14 +164,20 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		gl.glLoadIdentity();
 
 		//Scale what's being drawn to account for changes to the window
-		float scaleX = screenWidth/(float)virtualWidth;
-		float scaleY = screenHeight/(float)virtualHeight;
-		if (scaleX < scaleY)
+		float scaleX = virtualWidth/(float)screenWidth;
+		float scaleY = virtualHeight/(float)screenHeight;
+		if (scaleX > scaleY)
 			scaleY = scaleX;
 		else
 			scaleX = scaleY;
+		
+		actualScaleY = scaleY;
 
-		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)/scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)/scaleY, 0, 1);
+		
+
+		
+
+		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)*scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)*scaleY, 0, 1);
 
 		//Update projection matrices
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
@@ -398,6 +406,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public void mouseClicked(MouseEvent e)
 	{
 		updateMousePosition(e);
+
 		if (IntersectionOps.isPointInsidePoly(new Vec2(mousePosition.getX(), mousePosition.getY()), theSun.boundaryPoints))
 		{
 			drawWinter = !drawWinter;
@@ -440,6 +449,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	              projectionMatrix, 0,
 	              viewport, 0,
 	              wCoord, 0);
-			mousePosition = new Point2D.Double(wCoord[0], virtualHeight-wCoord[1]);
+			mousePosition = new Point2D.Double(wCoord[0], (((screenHeight + cameraOrigin.y)*actualScaleY)-wCoord[1]));
 	}
 }
