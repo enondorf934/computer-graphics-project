@@ -20,23 +20,20 @@ public final class UnitTree implements Drawable, Shape
 {
   private static final Random r = new Random();
 
-  private static final double WIDTH = 300.0;
+  private static final double WIDTH = 400.0;
   private static final double HEIGHT = 500.0;
 
   private static final Color TRUNK_COLOR = new Color(166, 129, 62);
-  private static final double TRUNK_WIDTH_RATIO = 0.075;
+  private static final double TRUNK_WIDTH_RATIO = 0.05;
   private static final double TRUNK_HEIGHT_RATIO = 0.4;
 
-  private static final int MIN_NUM_LEAF_CLUSTERS = 12;
-  private static final int MAX_NUM_LEAF_CLUSTERS = 20;
+  private static final int MIN_NUM_LEAF_CLUSTERS = 15;
+  private static final int MAX_NUM_LEAF_CLUSTERS = 25;
 
-  private static final double MIN_LEAF_WIDTH_RATI0 = 0.1;
-  private static final double MAX_LEAF_WIDTH_RATIO = 0.5;
+  private static final double MIN_RADIUS_RATIO = 0.075;
+  private static final double MAX_RADIUS_RATIO = 0.3;
 
-  private static final double MIN_LEAF_HEIGHT_RATI0 = 0.1;
-  private static final double MAX_LEAF_HEIGHT_RATIO = 0.5;
-
-  private static final double LEAF_CLUSTER_HEIGHT_RATIO = 0.75;
+  private static final double LEAF_CLUSTER_HEIGHT_RATIO = 0.80;
 
   //****************************************************************************
 
@@ -48,10 +45,8 @@ public final class UnitTree implements Drawable, Shape
   private double trunkWidth;
   private double trunkHeight;
 
-  private double minLeafWidth;
-  private double maxLeafWidth;
-  private double minLeafHeight;
-  private double maxLeafHeight;
+  private double minRadius;
+  private double maxRadius;
 
   private ArrayList<Point2D.Double> trunkFillVertices;    // vertices to fill tree trunk
   private ArrayList<Point2D.Double> trunkOutlineVertices; // vertices to outline tree trunk
@@ -78,10 +73,8 @@ public final class UnitTree implements Drawable, Shape
     calculateTrunkVertices();
 
     // Initialize minimum and maximum leaf cluster values
-    minLeafWidth = MIN_LEAF_WIDTH_RATI0 * w;
-    maxLeafWidth = MAX_LEAF_WIDTH_RATIO * w;
-    minLeafHeight = MIN_LEAF_HEIGHT_RATI0 * h;
-    maxLeafHeight = MAX_LEAF_HEIGHT_RATIO * h;
+    minRadius = MIN_RADIUS_RATIO * w;
+    maxRadius = MAX_RADIUS_RATIO * w;
 
     generateLeafClusters();
   }
@@ -136,20 +129,20 @@ public final class UnitTree implements Drawable, Shape
     // Add each new leaf cluster to tree
     for (int i = 0; i < numClusters; i++)
     {
-      // Generate random leaf cluster width (height) relative to tree width (height)
-      // and within minimum and maximum ratios of tree width (height)
-      double leafWidth = (maxLeafWidth - minLeafWidth) * r.nextDouble() + minLeafWidth;
-      double leafHeight = (maxLeafHeight - minLeafHeight) * r.nextDouble() + minLeafHeight;
+      // Generate random leaf cluster radius within range
+      double radius = (maxRadius - minRadius) * r.nextDouble() + minRadius;
 
-      // Generate random leaf cluster position relative to tree width and hight
-      // and given leaf cluster width and height
-      double max_x = x + w - leafWidth;
-      double max_y = y + h - leafHeight;
-      double min_y = (1 - LEAF_CLUSTER_HEIGHT_RATIO) * h + y;
-      double leaf_x = (max_x - x) * r.nextDouble() + x;
-      double leaf_y = (max_y - min_y) * r.nextDouble() + min_y;
+      // Calculate range for leaf cluster center
+      double minCenterX = x + radius;       // minimum x-value for center of leaf cluster
+      double maxCenterX = x + w - radius;   // maximum x-value for center of leaf cluster
+      double minCenterY = (1 - LEAF_CLUSTER_HEIGHT_RATIO) * h + y + radius; // minimum y-value for center of leaf cluster
+      double maxCenterY = y + h - radius;   // maximum y-value for center of leaf cluster
 
-      leafClusters.add(new LeafCluster(leaf_x, leaf_y, leafWidth, leafHeight));
+      // Generate random leaf cluster center within range
+      double cx = (maxCenterX - minCenterX) * r.nextDouble() + minCenterX;
+      double cy = (maxCenterY - minCenterY) * r.nextDouble() + minCenterY;
+
+      leafClusters.add(new LeafCluster(cx, cy, radius));
     }
   }
 
