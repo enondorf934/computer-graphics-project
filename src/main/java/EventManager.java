@@ -42,10 +42,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private static int screenWidth = 1920;
 	private static int screenHeight = 1080;
 
-	private static int horizon = 467;
+	private static int horizon = 275;
 	private static int mountainHorizon = horizon - 2;
 
-	private static int lowestCloudLevel = horizon + 275;
+	private static int lowestCloudLevel = horizon + 325;
 
 
 	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
@@ -199,7 +199,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		Drawers.drawSkyRect(gl, new Color[]{new Color(2, 125, 254), new Color(82, 192, 255), new Color(188, 245, 255)}, 0, 1920, horizon, 1080);
 
 		//Draw the ground
-		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 196, horizon-1);
+		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 0, horizon-1);
 
 		//Draw the background mountains
 		Drawers.drawMountains(gl, mountains);
