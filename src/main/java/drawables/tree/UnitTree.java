@@ -20,11 +20,11 @@ public final class UnitTree implements Drawable, Shape
 {
   private static final Random r = new Random();
 
-  private static final double WIDTH = 300.0;
+  private static final double WIDTH = 400.0;
   private static final double HEIGHT = 500.0;
 
   private static final Color TRUNK_COLOR = new Color(166, 129, 62);
-  private static final double TRUNK_WIDTH_RATIO = 0.075;
+  private static final double TRUNK_WIDTH_RATIO = 0.05;
   private static final double TRUNK_HEIGHT_RATIO = 0.4;
 
   private static final int MIN_NUM_LEAF_CLUSTERS = 15;
