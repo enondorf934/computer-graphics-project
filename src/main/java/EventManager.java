@@ -210,7 +210,13 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		Drawers.drawTree(gl, tree);
 		gl.glPopMatrix();	// Restore the CT from before
 	}
-
+	
+	public static void renderWinter(GLAutoDrawable drawable)
+	{
+		GL2 gl = drawable.getGL().getGL2();
+		
+	
+	}
 	public static void updateClouds(int counter, int screenWidth)
 	{
 		for(CloudCluster cluster : cloudClusterList)
@@ -221,7 +227,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				{
 					if(isCloudDirectionToRight)
 					{
-						if(cloud.getCx() >= screenWidth)
+						if(cloud.getCx() >= virtualWidth)
 						{
 							cloud.setCx(0 - cloud.getWidth());
 						}
@@ -231,14 +237,12 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 					{
 						if(cloud.getCx() + cloud.getWidth() <= 0)
 						{
-							cloud.setCx(screenWidth);
+							cloud.setCx(virtualWidth);
 						}
 
 						cloud.setCx(cloud.getCx() -1);
 					}
-
 				}
-
 			}
 		}
 	}

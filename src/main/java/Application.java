@@ -20,10 +20,10 @@ public class Application
 	{
 		//Create JFrame
 		JFrame			frame = new JFrame("Template");
-		frame.setBounds(50, 50, 600, 600);
+		//frame.setBounds(50, 50, 960, 540);
 		//Create GLCanvas
 		GLJPanel		canvas = new GLJPanel();
-		canvas.setPreferredSize(new Dimension(1920,1080));
+		canvas.setPreferredSize(new Dimension(960,540));
 		canvas.setFocusTraversalKeysEnabled(false);
 
 		//Attach interaction to GLJPanel
