@@ -305,11 +305,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 */
 	public static void initWinter()
 	{
-		//Prepare IFS values for the tree
+		//Prepare IFS values for the tree (modified from parameters' source Paul Bourke at http://paulbourke.net/fractals/)
 		ArrayList<Mat2> treeLinearTransforms = new ArrayList<Mat2>();
 		treeLinearTransforms.add(new Mat2(0.195,-0.488,0.344,0.443));
 		treeLinearTransforms.add(new Mat2(0.462,0.414,-0.252,0.361));
-		treeLinearTransforms.add(new Mat2(-0.637,0,0,0.501));
+		treeLinearTransforms.add(new Mat2(-0.6395,0,0,0.501));
 		treeLinearTransforms.add(new Mat2(-0.035,0.07,-0.469,0.022));
 		treeLinearTransforms.add(new Mat2(-0.058,-0.07,0.453,-0.111));
 		
@@ -467,7 +467,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	/**
 	 * Updates the clouds for the summer scene
 	 * @param counter
-	 * @param screenWidth
 	 */
 	public static void updateClouds(int counter)
 	{
