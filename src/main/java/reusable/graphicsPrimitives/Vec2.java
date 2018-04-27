@@ -18,16 +18,16 @@ public class Vec2
 {
 	
 	//Static variables 
-	public static final Vec2 Zero = new Vec2(0,0); 	//(0,0)
+	public static final Vec2 Zero = new Vec2(0,0); 		//(0,0)
 	public static final Vec2 Left = new Vec2(-1,0); 	//(-1, 0)
-	public static final Vec2 Right= new Vec2(1,0); 	//(1, 0)
+	public static final Vec2 Right= new Vec2(1,0); 		//(1, 0)
 	public static final Vec2 Up  	= new Vec2(0,1); 	//(0, 1)
 	public static final Vec2 Down = new Vec2(0,-1); 	//(0, -1)
 	public static final Vec2 Unit = new Vec2(1, 1); 	//(1, 1)	
 	
 	//Instance variables
-	public double x;
-	public double y;
+	protected double x;
+	protected double y;
 	
 	//Constructor(s)
 	
