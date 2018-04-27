@@ -81,9 +81,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	// FIXME
 	public static UnitTree tree = new UnitTree();
 	
-	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
-	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
-	public static ArrayList<CloudCluster> cloudClusterList = new ArrayList<CloudCluster>();
+	public static ArrayList<Cloud> clouds;
+	public static ArrayList<Mountain> mountains;
+	public static ArrayList<CloudCluster> cloudClusterList;
 	public static DrawableIFS ifs;
 	public final static double SNOWTREEHEIGHT = 500;
 	
@@ -213,6 +213,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	
 	public static void initSummer()
 	{
+		clouds = new ArrayList<Cloud>();
+		mountains = new ArrayList<Mountain>();
+		cloudClusterList =  new ArrayList<CloudCluster>();
 		initializeMountains();
 		initializeClouds();
 	}
