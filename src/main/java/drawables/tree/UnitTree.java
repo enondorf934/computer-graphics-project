@@ -86,6 +86,16 @@ public final class UnitTree implements Drawable, Shape
     return w;
   }
 
+  public int getNumLeafClusters()
+  {
+    return leafClusters.size();
+  }
+
+  public ArrayList<LeafCluster> getLeafClusters()
+  {
+    return leafClusters;
+  }
+
   //****************************************************************************
 
   private void calculateTrunkVertices()
@@ -146,7 +156,7 @@ public final class UnitTree implements Drawable, Shape
     }
   }
 
-  private void drawTrunk(GL2 gl)
+  public void drawTrunk(GL2 gl)
   {
     // Set trunk color
     Helpers.setColor(gl, TRUNK_COLOR);
@@ -187,7 +197,7 @@ public final class UnitTree implements Drawable, Shape
     gl.glEnd();
   }
 
-  private void drawLeafClusters(GL2 gl)
+  public void drawLeafClusters(GL2 gl)
   {
     for (LeafCluster leafCluster : leafClusters)
     {

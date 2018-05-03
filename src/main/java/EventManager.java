@@ -103,6 +103,20 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 */
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
+	//****************************************************************************
+	
+  // Leaf cluster animation variables
+	private boolean areLeavesFalling = false;	// true if leaves are falling, else false
+	private int frameCounter = 0;							// the number of frames since leaves began falling
+	private static double leafDy = 0.0;				// displacement in y-direction of falling leaves
+
+	// the offset in number of frames between falling leaf clusters
+	private static final int NUM_FRAMES_OFFSET = 5;
+
+	// the incremental displacement of falling leaves in the negative y-direction
+	private static final double LEAF_DY_INCREMENT = -5.0;
+
+	//****************************************************************************
 	
 	//********INFORMATION USED BY BOTH SEASONS********//
 	
@@ -186,7 +200,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//Set the clear color to black
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		
+
 		//Update the scene every frame
 		update();
 		updateProjectionMatrix(drawable);
@@ -196,7 +210,162 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			renderSummer(drawable);
 		else
 			renderWinter(drawable);
-		
+	}
+
+	private boolean areLeavesOffScreen()
+	{
+		// Get the index of the last leaf cluster to fall from the tree
+		int lastIndex = tree.getNumLeafClusters() - 1;
+
+		// Get the last leaf cluster to fall from the tree
+		LeafCluster lastLeafCluster = tree.getLeafClusters().get(lastIndex);
+
+		// Calculate the maximum starting height of the last leaf cluster
+		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + horizon;
+
+		// If the displacement is greater than the combined offset and height of the last leaf cluster,
+		// then all of the leaf clusters are off the screen
+		if (leafDy <= (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * lastIndex) - height)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private void setAreLeavesFalling()
+	{
+		areLeavesFalling = !areLeavesFalling;
+
+		// If the leaves have fallen off screen, reset the leaves
+		if (areLeavesOffScreen())
+		{
+			System.out.println("here");
+			for (LeafCluster leafCluster : tree.getLeafClusters())
+			{
+				leafCluster.setIsFalling(false);
+			}
+			leafDy = 0.0;
+			frameCounter = 0;
+		}
+	}
+
+	private void setFallingLeafCluster()
+	{
+		int numLeafClusters = tree.getNumLeafClusters();
+
+		for (int i = 0; i < numLeafClusters; i++)
+		{
+			LeafCluster leafCluster = tree.getLeafClusters().get(i);
+
+			// Set only the next leaf cluster to start falling
+			if (!leafCluster.getIsFalling())
+			{
+				leafCluster.setIsFalling(true);
+				break;
+			}
+		}
+	}
+
+	private void incrementLeafDy()
+	{
+		leafDy += LEAF_DY_INCREMENT;
+	}
+
+	private void incrementFrameCounter()
+	{
+		frameCounter++;
+	}
+
+	private void updateLeafClusters()
+	{
+		// Mark a new leaf cluster to start falling every 5 frames
+		if (frameCounter % NUM_FRAMES_OFFSET == 0)
+		{
+			setFallingLeafCluster();
+		}
+
+		// Increase displacement of falling leaf clusters
+		incrementLeafDy();
+
+		// Increment frame counter
+		incrementFrameCounter();
+	}
+
+	private void updateCloudsCounter()
+	{
+		counter++;
+	}
+
+	private void update()
+	{
+
+		if (seasonChanged)
+		{
+			if (!drawWinter)
+				initSummer();
+			else
+				initWinter();
+			seasonChanged =false;
+		}
+
+		//If it's summer
+		if (!drawWinter)
+		{
+			if (areLeavesFalling)
+			{
+				updateLeafClusters();
+			}
+
+			if(isCloudMoving)
+			{
+				updateCloudsCounter();
+			}
+			updateClouds(counter, screenWidth);
+		}
+
+		//If it's winter
+		if(drawWinter)
+		{
+			for (int i=0; i<10; i++)
+			{
+				ifs.iterate();
+				groundIFS.iterate();
+			}
+			flurry.iterate(1/60.0);
+		}
+	}
+
+	private void updateProjectionMatrix(GLAutoDrawable drawable)
+	{
+		GL2 gl = drawable.getGL().getGL2();
+
+		//Project to the window
+		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
+		gl.glLoadIdentity();
+
+		//Scale what's being drawn to account for changes to the window
+		float scaleX = virtualWidth/(float)screenWidth;
+		float scaleY = virtualHeight/(float)screenHeight;
+		if (scaleX > scaleY)
+			scaleY = scaleX;
+		else
+			scaleX = scaleY;
+
+		actualScaleY = scaleY;
+
+
+
+
+
+		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)*scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)*scaleY, 0, 1);
+
+		//Update projection matrices
+		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
+        gl.glGetDoublev(GLMatrixFunc.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+        gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX,  modelMatrix, 0);
 	}
 
     //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
@@ -218,6 +387,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		screenWidth = width;
 		screenHeight = height;
 	}
+
 	
 	/******************************************/
 	/*Render methods*/
@@ -250,36 +420,62 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		// Transform and draw the tree
 		gl.glPushMatrix(); // Copy the CT for local changes
 		gl.glTranslated((virtualWidth - tree.getWidth()) / 2, HORIZON, 0.0);
-		Drawers.drawTree(gl, tree);
+		Drawers.drawTreeTrunk(gl, tree);
+		drawLeafClusters(gl);
 		gl.glPopMatrix();	// Restore the CT from before
+	}
+
+	private static void drawLeafClusters(GL2 gl)
+	{
+		for (int i = 0; i < tree.getNumLeafClusters(); i++)
+		{
+			// Get leaf cluster
+			LeafCluster leafCluster = tree.getLeafClusters().get(i);
+
+			// If leaf cluster is falling, translate in negative y-direction
+			if (leafCluster.getIsFalling())
+			{
+				// Calculate displacement of falling leaf cluster
+				double dy = leafDy - (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * i);
+
+				gl.glPushMatrix();							// Copy the CT for local changes
+				gl.glTranslated(0.0, dy, 0.0);	// Translate in y-direction
+				leafCluster.draw(gl);						// Draw leaf cluster
+				gl.glPopMatrix();								// Restore the CT from before
+			}
+			// Else, draw leaf cluster without translating
+			else
+			{
+				leafCluster.draw(gl);
+			}
+		}
 	}
 	
 	/**
 	 * Renders the winter scene to the given GLAutoDrawable
 	 * @param drawable
-	 */
 	public static void renderWinter(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
-		
+
 		//Cover the screen with blackness
 		Drawers.drawGroundRect(gl, Color.BLACK, Color.BLACK, 0, 1920, 0, 1080);
-		
+
 		//Draw the moon
 		Helpers.setColor(gl, Color.WHITE);
 		Helpers.drawPolygon(gl, theSunOrMoon.boundaryPoints);
-		
+
 		//We'll draw most of the flakes white
 		Helpers.setColor(gl, Color.WHITE);
-		
+
 		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glPushMatrix();
 		gl.glTranslated(670, 0, 0);
 		treeIFS.draw(gl);
 		gl.glPopMatrix();
-		
+
 		groundIFS.draw(gl);
-		
+
 		flurry.draw(gl);
 	}
 	
@@ -514,6 +710,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				break;
 			case KeyEvent.VK_LEFT:
 				isCloudDirectionToRight = false;
+				break;
+			case KeyEvent.VK_SPACE:
+				setAreLeavesFalling();
 				break;
 		}
 		

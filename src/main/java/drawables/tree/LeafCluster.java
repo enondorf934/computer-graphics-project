@@ -39,6 +39,8 @@ public final class LeafCluster implements Drawable, Shape
   private float b;              // brightness component of the color
   private float alpha = 0.60f;  // default transparency
 
+  private boolean isFalling;    // true if the leaf cluster is falling, else false
+
   //****************************************************************************
 
   // Constructors
@@ -49,6 +51,7 @@ public final class LeafCluster implements Drawable, Shape
     this.radius = radius;
 
     calculateVertices();
+    
     generateRandomColor();
   }
 
@@ -61,6 +64,26 @@ public final class LeafCluster implements Drawable, Shape
     this.h = h;
     this.s = s;
     this.b = b;
+  }
+
+  public void setIsFalling(boolean isFalling)
+  {
+    this.isFalling = isFalling;
+  }
+
+  public boolean getIsFalling()
+  {
+    return isFalling;
+  }
+
+  public double getCy()
+  {
+    return cy;
+  }
+
+  public double getRadius()
+  {
+    return radius;
   }
 
   //****************************************************************************
