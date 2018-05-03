@@ -36,6 +36,11 @@ public class DrawableIFS extends IFS
 	 * The amount to scale this IFS in the vertical direction in some other coordinate space
 	 */
 	private double yScaling;
+	
+	/**
+	 * The maximum number of elements (to makes sure this doesn't continuously hog more resources
+	 */
+	private final int MAX_ELEMENTS = 1000000;
 
 	/**
 	 * Prepares a Drawable iterated functions system with the IFS component being dictated by IFS(matrices, addends), the position for drawing being determined by origin, and the scaling factors for drawing being determined by xScaling and yScaling
@@ -60,6 +65,8 @@ public class DrawableIFS extends IFS
 	{
 		Vec2 returnVal = super.iterate();
 		coordinates.add(returnVal);
+		if (coordinates.size()>MAX_ELEMENTS)
+			coordinates.remove(0);
 		return returnVal.makeCopy();
 	}
 
