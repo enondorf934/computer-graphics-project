@@ -51,7 +51,7 @@ public final class LeafCluster implements Drawable, Shape
     this.radius = radius;
 
     calculateVertices();
-    
+
     generateRandomColor();
   }
 
@@ -74,6 +74,11 @@ public final class LeafCluster implements Drawable, Shape
   public boolean getIsFalling()
   {
     return isFalling;
+  }
+
+  public double getCx()
+  {
+    return cx;
   }
 
   public double getCy()

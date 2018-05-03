@@ -104,20 +104,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 */
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
-	//****************************************************************************
-
-  // Leaf cluster animation variables
-	private boolean areLeavesFalling = false;	// true if leaves are falling, else false
-	private int frameCounter = 0;							// the number of frames since leaves began falling
-	private static double leafDy = 0.0;				// displacement in y-direction of falling leaves
-
-	// the offset in number of frames between falling leaf clusters
-	private static final int NUM_FRAMES_OFFSET = 5;
-
-	// the incremental displacement of falling leaves in the negative y-direction
-	private static final double LEAF_DY_INCREMENT = -5.0;
-
-	//****************************************************************************
 
 	//********INFORMATION USED BY BOTH SEASONS********//
 
@@ -142,6 +128,36 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 * A size-1 summer tree.
 	 */
 	public static UnitTree tree = new UnitTree();
+
+	// Leaf cluster information
+	/**
+	* True if leaves are falling, else false
+	*/
+	private boolean areLeavesFalling = false;
+	/**
+	* The number of frames since leaf clusters began falling
+	*/
+	private int frameCounter = 0;
+	/**
+	* The displacement in the y-direction of falling leaf clusters
+	*/
+	private static double leafDy = 0.0;
+	/**
+	* The angle of rotation of falling leaf clusters
+	*/
+	private static int leafAngle = 0;
+	/**
+	* The offset in number of frames between falling leaf clusters
+	*/
+	private static final int NUM_FRAMES_OFFSET = 5;
+	/**
+	* The incremental displacement of falling leaf clusters in the negative y-direction
+	*/
+	private static final double LEAF_DY_INCREMENT = -5.0;
+	/**
+	* The incremental angle of rotation of falling leaf clusters
+	*/
+	private static final int LEAF_ANGLE_INCREMENT = 2;
 
 	//Cloud information
 	/**
@@ -213,87 +229,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			renderWinter(drawable);
 	}
 
-	private boolean areLeavesOffScreen()
-	{
-		// Get the index of the last leaf cluster to fall from the tree
-		int lastIndex = tree.getNumLeafClusters() - 1;
-
-		// Get the last leaf cluster to fall from the tree
-		LeafCluster lastLeafCluster = tree.getLeafClusters().get(lastIndex);
-
-		// Calculate the maximum starting height of the last leaf cluster
-		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + HORIZON;
-
-		// If the displacement is greater than the combined offset and height of the last leaf cluster,
-		// then all of the leaf clusters are off the screen
-		if (leafDy <= (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * lastIndex) - height)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	private void setAreLeavesFalling()
-	{
-		areLeavesFalling = !areLeavesFalling;
-
-		// If the leaves have fallen off screen, reset the leaves
-		if (areLeavesOffScreen())
-		{
-			for (LeafCluster leafCluster : tree.getLeafClusters())
-			{
-				leafCluster.setIsFalling(false);
-			}
-			leafDy = 0.0;
-			frameCounter = 0;
-		}
-	}
-
-	private void setFallingLeafCluster()
-	{
-		int numLeafClusters = tree.getNumLeafClusters();
-
-		for (int i = 0; i < numLeafClusters; i++)
-		{
-			LeafCluster leafCluster = tree.getLeafClusters().get(i);
-
-			// Set only the next leaf cluster to start falling
-			if (!leafCluster.getIsFalling())
-			{
-				leafCluster.setIsFalling(true);
-				break;
-			}
-		}
-	}
-
-	private void incrementLeafDy()
-	{
-		leafDy += LEAF_DY_INCREMENT;
-	}
-
-	private void incrementFrameCounter()
-	{
-		frameCounter++;
-	}
-
-	private void updateLeafClusters()
-	{
-		// Mark a new leaf cluster to start falling every 5 frames
-		if (frameCounter % NUM_FRAMES_OFFSET == 0)
-		{
-			setFallingLeafCluster();
-		}
-
-		// Increase displacement of falling leaf clusters
-		incrementLeafDy();
-
-		// Increment frame counter
-		incrementFrameCounter();
-	}
-
   //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
 	@Override
 	public void dispose(GLAutoDrawable arg0){}
@@ -361,12 +296,23 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			// If leaf cluster is falling, translate in negative y-direction
 			if (leafCluster.getIsFalling())
 			{
+				// Get center of leaf cluster
+				double cx = leafCluster.getCx();
+				double cy = leafCluster.getCy();
+
 				// Calculate displacement of falling leaf cluster
 				double dy = leafDy - (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * i);
 
 				gl.glPushMatrix();							// Copy the CT for local changes
-				gl.glTranslated(0.0, dy, 0.0);	// Translate in y-direction
+
+				// Apply transformation matrices in reverse order
+				gl.glTranslated(0.0, dy, 0.0);						// Translate in y-direction
+				gl.glTranslated(cx, cy, 0.0);							// Move leaf cluster back to original position
+				gl.glRotated(-leafAngle, 0.0, 0.0, 1.0);	// Rotate leaf cluster clockwise about z-axis
+				gl.glTranslated(-cx, -cy, 0.0);						// Move leaf cluster to origin
+
 				leafCluster.draw(gl);						// Draw leaf cluster
+
 				gl.glPopMatrix();								// Restore the CT from before
 			}
 			// Else, draw leaf cluster without translating
@@ -511,6 +457,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(50, MOUNTAIN_HORIZON, 40, 60));
 	}
 
+
 	/******************************************/
 	/*Update methods*/
 	/******************************************/
@@ -624,6 +571,122 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			}
 		}
 	}
+
+	/**
+	* Updates the falling leaf clusters in the summer scene
+	*/
+	private void updateLeafClusters()
+	{
+		// Mark a new leaf cluster to start falling every 5 frames
+		if (frameCounter % NUM_FRAMES_OFFSET == 0)
+		{
+			setFallingLeafCluster();
+		}
+
+		// Increase displacement of falling leaf clusters
+		incrementLeafDy();
+		incrementLeafAngle();
+
+		// Increment frame counter
+		incrementFrameCounter();
+	}
+
+	/**
+	* Increases leaf cluster displacement in y-direction by constant increment
+	*/
+	private void incrementLeafDy()
+	{
+		leafDy += LEAF_DY_INCREMENT;
+	}
+
+	/**
+	* Increases leaf cluster angle of rotation by constant increment
+	*/
+	private void incrementLeafAngle()
+	{
+		leafAngle += LEAF_ANGLE_INCREMENT;
+	}
+
+	/**
+	* Increments the frame counter used to count frames as leaf clusters fall
+	*/
+	private void incrementFrameCounter()
+	{
+		frameCounter++;
+	}
+
+
+	/******************************************/
+	/*Private methods*/
+	/******************************************/
+
+	/**
+	* Returns true if all leaf clusters have fallen off the bottom of the screen,
+	* else returns false
+	*/
+	private boolean areLeavesOffScreen()
+	{
+		// Get the index of the last leaf cluster to fall from the tree
+		int lastIndex = tree.getNumLeafClusters() - 1;
+
+		// Get the last leaf cluster to fall from the tree
+		LeafCluster lastLeafCluster = tree.getLeafClusters().get(lastIndex);
+
+		// Calculate the maximum starting height of the last leaf cluster
+		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + HORIZON;
+
+		// If the displacement is greater than the combined offset and height of the last leaf cluster,
+		// then all of the leaf clusters are off the screen
+		if (leafDy <= (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * lastIndex) - height)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	* Negates whether the leaf clusters are falling or not
+	* and resets the leaf clusters on the tree if they have fallen off screen
+	*/
+	private void setAreLeavesFalling()
+	{
+		areLeavesFalling = !areLeavesFalling;
+
+		// If the leaves have fallen off screen, reset the leaves
+		if (areLeavesOffScreen())
+		{
+			for (LeafCluster leafCluster : tree.getLeafClusters())
+			{
+				leafCluster.setIsFalling(false);
+			}
+			leafDy = 0.0;
+			frameCounter = 0;
+		}
+	}
+
+	/**
+	* Marks the next leaf cluster to begin falling
+	*/
+	private void setFallingLeafCluster()
+	{
+		int numLeafClusters = tree.getNumLeafClusters();
+
+		for (int i = 0; i < numLeafClusters; i++)
+		{
+			LeafCluster leafCluster = tree.getLeafClusters().get(i);
+
+			// Set only the next leaf cluster to start falling
+			if (!leafCluster.getIsFalling())
+			{
+				leafCluster.setIsFalling(true);
+				break;
+			}
+		}
+	}
+
 
 	/******************************************/
 	/*KeyListener Methods*/
