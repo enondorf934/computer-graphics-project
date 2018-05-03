@@ -58,15 +58,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private static boolean drawWinter = false;
 
-	//The points in the galaxy (modeled by a Lorenz attractor) that will be drawn
-
-	private static
-
-
-
-
-
-	float targetAspectRatio = virtualWidth/virtualHeight;
+	private static float targetAspectRatio = virtualWidth/virtualHeight;
 
 	int[] viewport = new int[4];
 	private double[] projectionMatrix = new double[16];
@@ -75,11 +67,25 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private Point2D.Double cameraOrigin = new Point2D.Double(0, 0);
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
-
 	public static RegularPolygon theSun = new RegularPolygon(new Vec2(1920*.9, 1080*.9), 0, 70, 30);
 
-	// FIXME
-	public static UnitTree tree = new UnitTree();
+	//****************************************************************************
+
+	// Summer tree variables
+	public static UnitTree tree = new UnitTree();	// the tree in the summer scene
+
+	// Leaf cluster animation variables
+	private boolean areLeavesFalling = true;	// true if leaves are falling, else false
+	private int frameCounter = 0;							// the number of frames since leaves began falling
+	private static double leafDy = 0.0;				// displacement in y-direction of falling leaves
+
+	// the offset in number of frames between falling leaf clusters
+	private static final int NUM_FRAMES_OFFSET = 5;
+
+	// the incremental displacement of falling leaves in the negative y-direction
+	private static final double LEAF_DY_INCREMENT = -5.0;
+
+	//****************************************************************************
 
 	public static ArrayList<Cloud> clouds = new ArrayList<Cloud>();
 	public static ArrayList<Mountain> mountains = new ArrayList<Mountain>();
@@ -121,10 +127,53 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	}
 
+	private void setFallingLeafCluster()
+	{
+		int numLeafClusters = tree.getNumLeafClusters();
+
+		for (int i = 0; i < numLeafClusters; i++)
+		{
+			LeafCluster leafCluster = tree.getLeafClusters().get(i);
+
+			// Set only the next leaf cluster to start falling
+			if (!leafCluster.getIsFalling())
+			{
+				leafCluster.setIsFalling(true);
+				break;
+			}
+		}
+	}
+
+	private void incrementLeafDy()
+	{
+		leafDy += LEAF_DY_INCREMENT;
+	}
+
+	private void incrementFrameCounter()
+	{
+		frameCounter++;
+	}
+
+	private void updateLeafClusters()
+	{
+		// Mark a new leaf cluster to start falling every 5 frames
+		if (frameCounter % NUM_FRAMES_OFFSET == 0)
+		{
+			setFallingLeafCluster();
+		}
+
+		// Increase displacement of falling leaf clusters
+		incrementLeafDy();
+
+		// Increment frame counter
+		incrementFrameCounter();
+	}
+
 	private void updateCloudsCounter()
 	{
 		counter++;
 	}
+
 	private void update()
 	{
 
@@ -140,6 +189,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//If it's summer
 		if (!drawWinter)
 		{
+			if (areLeavesFalling)
+			{
+				updateLeafClusters();
+			}
+
 			if(isCloudMoving)
 			{
 				updateCloudsCounter();
@@ -325,15 +379,28 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	private static void drawLeafClusters(GL2 gl)
 	{
-		gl.glPushMatrix();	// Copy the CT for local changes
-		gl.glTranslated(0.0, 0.0, 0.0);
-
-		for (LeafCluster leafCluster : tree.getLeafClusters())
+		for (int i = 0; i < tree.getNumLeafClusters(); i++)
 		{
-			leafCluster.draw(gl);
-		}
+			// Get leaf cluster
+			LeafCluster leafCluster = tree.getLeafClusters().get(i);
 
-		gl.glPopMatrix();		// Restore the CT from before
+			// If leaf cluster is falling, translate in negative y-direction
+			if (leafCluster.getIsFalling())
+			{
+				// Calculate displacement of falling leaf cluster
+				double dy = leafDy - (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * i);
+
+				gl.glPushMatrix();							// Copy the CT for local changes
+				gl.glTranslated(0.0, dy, 0.0);	// Translate in y-direction
+				leafCluster.draw(gl);						// Draw leaf cluster
+				gl.glPopMatrix();								// Restore the CT from before
+			}
+			// Else, draw leaf cluster without translating
+			else
+			{
+				leafCluster.draw(gl);
+			}
+		}
 	}
 
 	public static void renderWinter(GLAutoDrawable drawable)
