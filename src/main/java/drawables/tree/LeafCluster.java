@@ -69,6 +69,16 @@ public final class LeafCluster implements Drawable, Shape
     return isFalling;
   }
 
+  public double getCy()
+  {
+    return cy;
+  }
+
+  public double getRadius()
+  {
+    return radius;
+  }
+
   //****************************************************************************
 
   private void calculateVertices()
