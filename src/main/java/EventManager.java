@@ -127,9 +127,44 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 	}
 
+	private boolean areLeavesOffScreen()
+	{
+		// Get the index of the last leaf cluster to fall from the tree
+		int lastIndex = tree.getNumLeafClusters() - 1;
+
+		// Get the last leaf cluster to fall from the tree
+		LeafCluster lastLeafCluster = tree.getLeafClusters().get(lastIndex);
+
+		// Calculate the maximum starting height of the last leaf cluster
+		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + horizon;
+
+		// If the displacement is greater than the combined offset and height of the last leaf cluster,
+		// then all of the leaf clusters are off the screen
+		if (leafDy <= (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * lastIndex) - height)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	private void setAreLeavesFalling()
 	{
 		areLeavesFalling = !areLeavesFalling;
+
+		// If the leaves have fallen off screen, reset the leaves
+		if (areLeavesOffScreen())
+		{
+			System.out.println("here");
+			for (LeafCluster leafCluster : tree.getLeafClusters())
+			{
+				leafCluster.setIsFalling(false);
+			}
+			leafDy = 0.0;
+			frameCounter = 0;
+		}
 	}
 
 	private void setFallingLeafCluster()
