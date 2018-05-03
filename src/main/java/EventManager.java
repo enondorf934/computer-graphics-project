@@ -75,7 +75,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	public static UnitTree tree = new UnitTree();	// the tree in the summer scene
 
 	// Leaf cluster animation variables
-	private boolean areLeavesFalling = true;	// true if leaves are falling, else false
+	private boolean areLeavesFalling = false;	// true if leaves are falling, else false
 	private int frameCounter = 0;							// the number of frames since leaves began falling
 	private static double leafDy = 0.0;				// displacement in y-direction of falling leaves
 
@@ -125,6 +125,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			renderWinter(drawable);
 
 
+	}
+
+	private void setAreLeavesFalling()
+	{
+		areLeavesFalling = !areLeavesFalling;
 	}
 
 	private void setFallingLeafCluster()
@@ -472,6 +477,9 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				break;
 			case KeyEvent.VK_LEFT:
 				isCloudDirectionToRight = false;
+				break;
+			case KeyEvent.VK_SPACE:
+				setAreLeavesFalling();
 				break;
 		}
 
