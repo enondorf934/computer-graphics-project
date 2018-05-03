@@ -86,6 +86,11 @@ public final class UnitTree implements Drawable, Shape
     return w;
   }
 
+  public int getNumLeafClusters()
+  {
+    return leafClusters.size();
+  }
+
   public ArrayList<LeafCluster> getLeafClusters()
   {
     return leafClusters;
