@@ -243,7 +243,6 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		// If the leaves have fallen off screen, reset the leaves
 		if (areLeavesOffScreen())
 		{
-			System.out.println("here");
 			for (LeafCluster leafCluster : tree.getLeafClusters())
 			{
 				leafCluster.setIsFalling(false);
@@ -538,7 +537,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			{
 				updateLeafClusters();
 			}
-			
+
 			if(isCloudMoving)
 			{
 				cloudCounter++;
