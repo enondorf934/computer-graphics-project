@@ -534,6 +534,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		//If it's summer, update summer stuff
 		if (!drawWinter)
 		{
+			if (areLeavesFalling)
+			{
+				updateLeafClusters();
+			}
+			
 			if(isCloudMoving)
 			{
 				cloudCounter++;
