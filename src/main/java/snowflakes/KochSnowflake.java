@@ -2,11 +2,14 @@ package snowflakes;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL;
 
 import reusable.graphicsPrimitives.Vec2;
 import reusable.Helpers;
+
+import reusable.triangulation.*;
 
 /**
  * Prepares a Koch Snowflake object for drawing into a winter scene
@@ -20,6 +23,8 @@ public class KochSnowflake extends Snowflake
 	 * The coordinates of this Koch Snowflake's vertices at the current number of generations
 	 */
 	public ArrayList<Vec2> coordinates;
+	
+	List<Integer> triangulation;
 
 	/**
 	 * Prepares a KochSnowflake with position and angle being handled by the superclass Snowflake. 
@@ -37,6 +42,17 @@ public class KochSnowflake extends Snowflake
 		{
 			anotherLayer(radius, i);
 		}	
+		
+		double[] flattenedCoords = new double[coordinates.size()*2];
+		
+		for (int i=0; i<coordinates.size(); i++)
+		{
+			flattenedCoords[2*i] = coordinates.get(i).getX();
+			flattenedCoords[2*i+1] = coordinates.get(i).getY();
+		}
+		
+		triangulation = Earcut.earcut(flattenedCoords);
+
 	}
 	
 	/**
@@ -44,7 +60,7 @@ public class KochSnowflake extends Snowflake
 	 * @param radius The overall radius of this Koch Snowflake
 	 * @param genNumber The number of generations remaining to continue recursively calling anotherLayer
 	 */
-	public void anotherLayer(double radius, int genNumber)
+	private void anotherLayer(double radius, int genNumber)
 	{
 		if (genNumber == 0)
 		{
@@ -87,7 +103,15 @@ public class KochSnowflake extends Snowflake
 	public void internalDraw(GL gl)
 	{
 		Helpers.setColor(gl, Color.black);
-		Helpers.drawPolygon(gl, coordinates);
+		for (int i=0; i<triangulation.size(); i+=3)
+		{
+			ArrayList<Vec2> triangle = new ArrayList<Vec2>();
+			triangle.add(coordinates.get(triangulation.get(i)));
+			triangle.add(coordinates.get(triangulation.get(i+1)));
+			triangle.add(coordinates.get(triangulation.get(i+2)));
+			Helpers.drawPolygon(gl, triangle);
+		}
+		//Helpers.drawPolygon(gl, coordinates);
 		Helpers.setColor(gl, Color.white);
 		Helpers.drawLineLoop(gl, coordinates);
 
