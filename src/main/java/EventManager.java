@@ -20,6 +20,7 @@ import IFS.DrawableIFS;
 import drawables.Cloud;
 import drawables.CloudCluster;
 import drawables.Mountain;
+import drawables.tree.LeafCluster;
 import drawables.tree.UnitTree;
 import geometry.IntersectionOps;
 import geometry.RegularPolygon;
@@ -36,9 +37,9 @@ import snowflakes.SnowFlurry;
  */
 public class EventManager implements GLEventListener, KeyListener, MouseListener, MouseMotionListener
 {
-	
-	//********GENERAL APPLICATION STATE INFORMATION********//	
-	
+
+	//********GENERAL APPLICATION STATE INFORMATION********//
+
 	// The width and height of the our application virtually (i.e., in the world of the models)
 	/**
 	 * The virtual vertical resolution of our application (i.e., in the world of the models)
@@ -58,7 +59,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 * The height of the window in pixels.
 	 */
 	private static int screenHeight = 1080;
-	
+
 	//Information about the scaling factor used in keeping contents in window and for letterboxing.
 	/**
 	 * Keeps track of the scale factor in the y-direction of the scene. Used when finding the world coordinates of the mouse cursor.
@@ -104,7 +105,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private Point2D.Double mousePosition = new Point2D.Double(0, 0);
 
 	//****************************************************************************
-	
+
   // Leaf cluster animation variables
 	private boolean areLeavesFalling = false;	// true if leaves are falling, else false
 	private int frameCounter = 0;							// the number of frames since leaves began falling
@@ -117,31 +118,31 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private static final double LEAF_DY_INCREMENT = -5.0;
 
 	//****************************************************************************
-	
+
 	//********INFORMATION USED BY BOTH SEASONS********//
-	
+
 	/**
 	 * The polygon that's used for drawing the Sun (in summer) or the Moon (in winter)
 	 */
 	public static RegularPolygon theSunOrMoon = new RegularPolygon(new Vec2(1920*.9, 1080*.9), 0, 70, 30);
-	
+
 	/**
 	 * Whether the season changed recently. If true, then call init on the new season
 	 */
-	public static boolean seasonChanged = false;	
+	public static boolean seasonChanged = false;
 	/**
 	 * Whether to draw the winter scene. If false, the summer scene is drawn.
 	 */
 	private static boolean drawWinter = false;
-	
-	
+
+
 	//*********SUMMER INFORMATION*********//
-	
+
 	/**
 	 * A size-1 summer tree.
 	 */
 	public static UnitTree tree = new UnitTree();
-	
+
 	//Cloud information
 	/**
 	 * The list of clouds in the scene
@@ -163,29 +164,29 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	 * Cloud counter.
 	 */
 	private int cloudCounter = 0;
-	
+
 	/**
 	 * The list of mountains being drawn in the scene.
 	 */
 	public static ArrayList<Mountain> mountains;
 
-	
+
 	//*********WINTER INFORMATION***********//
 	/**
 	 * An iterated functions system for drawing the winter tree.
 	 */
 	public static DrawableIFS treeIFS;
-	
+
 	/**
 	 * An iterated function system for drawing the winter ground.
 	 */
 	public static DrawableIFS groundIFS;
-	
+
 	/**
 	 * A SnowFlurry object for dropping lots of Snowflake objects into and in the winter scene
 	 */
 	public static SnowFlurry flurry;
-	
+
 
 	/******************************************/
 	/*GLEventListener methods*/
@@ -221,7 +222,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		LeafCluster lastLeafCluster = tree.getLeafClusters().get(lastIndex);
 
 		// Calculate the maximum starting height of the last leaf cluster
-		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + horizon;
+		double height = lastLeafCluster.getCy() + lastLeafCluster.getRadius() + HORIZON;
 
 		// If the displacement is greater than the combined offset and height of the last leaf cluster,
 		// then all of the leaf clusters are off the screen
@@ -294,81 +295,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		incrementFrameCounter();
 	}
 
-	private void updateCloudsCounter()
-	{
-		counter++;
-	}
-
-	private void update()
-	{
-
-		if (seasonChanged)
-		{
-			if (!drawWinter)
-				initSummer();
-			else
-				initWinter();
-			seasonChanged =false;
-		}
-
-		//If it's summer
-		if (!drawWinter)
-		{
-			if (areLeavesFalling)
-			{
-				updateLeafClusters();
-			}
-
-			if(isCloudMoving)
-			{
-				updateCloudsCounter();
-			}
-			updateClouds(counter, screenWidth);
-		}
-
-		//If it's winter
-		if(drawWinter)
-		{
-			for (int i=0; i<10; i++)
-			{
-				ifs.iterate();
-				groundIFS.iterate();
-			}
-			flurry.iterate(1/60.0);
-		}
-	}
-
-	private void updateProjectionMatrix(GLAutoDrawable drawable)
-	{
-		GL2 gl = drawable.getGL().getGL2();
-
-		//Project to the window
-		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
-		gl.glLoadIdentity();
-
-		//Scale what's being drawn to account for changes to the window
-		float scaleX = virtualWidth/(float)screenWidth;
-		float scaleY = virtualHeight/(float)screenHeight;
-		if (scaleX > scaleY)
-			scaleY = scaleX;
-		else
-			scaleX = scaleY;
-
-		actualScaleY = scaleY;
-
-
-
-
-
-		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)*scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)*scaleY, 0, 1);
-
-		//Update projection matrices
-		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
-        gl.glGetDoublev(GLMatrixFunc.GL_PROJECTION_MATRIX, projectionMatrix, 0);
-        gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX,  modelMatrix, 0);
-	}
-
-    //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
+  //Called by the drawable when the display mode or the display device associated with the GLAutoDrawable has changed.
 	@Override
 	public void dispose(GLAutoDrawable arg0){}
 
@@ -388,11 +315,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		screenHeight = height;
 	}
 
-	
+
 	/******************************************/
 	/*Render methods*/
 	/******************************************/
-	
+
 	/**
 	 * Renders the summer scene to the given GLAutoDrawable
 	 * @param drawable
@@ -406,7 +333,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		//Draw the ground
 		Drawers.drawGroundRect(gl,  new Color(82, 63, 63), new Color(97, 143, 81), 0, 1920, 0, HORIZON-1);
-		
+
 		//Draw the sun
 		Helpers.setColor(gl, Color.YELLOW);
 		Helpers.drawPolygon(gl, theSunOrMoon.boundaryPoints);
@@ -450,10 +377,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			}
 		}
 	}
-	
+
 	/**
 	 * Renders the winter scene to the given GLAutoDrawable
 	 * @param drawable
+	 */
 	public static void renderWinter(GLAutoDrawable drawable)
 	{
 		GL2 gl = drawable.getGL().getGL2();
@@ -478,12 +406,12 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		flurry.draw(gl);
 	}
-	
-	
+
+
 	/******************************************/
 	/*Initialization methods*/
 	/******************************************/
-	
+
 	/**
 	 * Initializes/prepares variables being used for the summer scene
 	 */
@@ -495,7 +423,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		initializeMountains();
 		initializeClouds();
 	}
-	
+
 	/**
 	 * Initializes/prepares variables being used for the winter scene
 	 */
@@ -508,34 +436,34 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		treeLinearTransforms.add(new Mat2(-0.6395,0,0,0.501));
 		treeLinearTransforms.add(new Mat2(-0.035,0.07,-0.469,0.022));
 		treeLinearTransforms.add(new Mat2(-0.058,-0.07,0.453,-0.111));
-		
+
 		ArrayList<Vec2> treeTranslations = new ArrayList<Vec2>();
 		treeTranslations.add(new Vec2(0.4431,0.2452));
 		treeTranslations.add(new Vec2(0.2511,0.5692));
 		treeTranslations.add(new Vec2(0.8562,0.2512));
 		treeTranslations.add(new Vec2(0.4884,0.5069));
 		treeTranslations.add(new Vec2(0.5976,0.0969));
-		
-		//Prepare the tree IFS 
+
+		//Prepare the tree IFS
 		treeIFS = new DrawableIFS(new Vec2(0, HORIZON*0.9), 500, 500, treeLinearTransforms, treeTranslations);
-		
-		
+
+
 		//Prepare IFS values for the ground
 		ArrayList<Mat2> groundLinearTransforms = new ArrayList<Mat2>();
 		groundLinearTransforms.add(new Mat2(0.5,0,0,0.5));
 		groundLinearTransforms.add(new Mat2(0.5,0,0,0.5));
 		groundLinearTransforms.add(new Mat2(0.5,0,0,0.5));
 		groundLinearTransforms.add(new Mat2(0.5,0,0,0.5));
-			
+
 		ArrayList<Vec2> groundTranslations = new ArrayList<Vec2>();
 		groundTranslations.add(new Vec2(0,0));
 		groundTranslations.add(new Vec2(0.5,0));
 		groundTranslations.add(new Vec2(0,0.5));
 		groundTranslations.add(new Vec2(0.5,0.5));
-		
+
 		//Prepare the ground IFS
 		groundIFS = new DrawableIFS(new Vec2(0, 0), virtualWidth, HORIZON, groundLinearTransforms, groundTranslations);
-		
+
 		//Prepare the flurry of Snowflakes
 		flurry = new SnowFlurry(0, virtualWidth, HORIZON, 0, virtualHeight, 1/3.0);
 	}
@@ -583,16 +511,16 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		mountains.add(new Mountain(10, MOUNTAIN_HORIZON, 100, 60));
 		mountains.add(new Mountain(50, MOUNTAIN_HORIZON, 40, 60));
 	}
-	
+
 	/******************************************/
 	/*Update methods*/
 	/******************************************/
-	
+
 	/**
 	 * Method for updating contents of this scene
 	 */
 	private void update()
-	{			
+	{
 		//If the season recently changed, we need to reinitialize things
 		if (seasonChanged)
 		{
@@ -602,7 +530,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				initWinter();
 			seasonChanged =false;
 		}
-		
+
 		//If it's summer, update summer stuff
 		if (!drawWinter)
 		{
@@ -612,10 +540,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			}
 			updateClouds(cloudCounter);
 		}
-		
+
 		//If it's winter, update winter stuff
 		if(drawWinter)
-		{	
+		{
 			//Advance the IFSs by 10 iterations
 			for (int i=0; i<10; i++)
 			{
@@ -626,7 +554,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			flurry.iterate(1/60.0);
 		}
 	}
-	
+
 	/**
 	 * Updates the projection matrix, keeping contents on screen and providing a letterboxing/pillarboxing effect
 	 * @param drawable
@@ -646,10 +574,10 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			scaleY = scaleX;
 		else
 			scaleX = scaleY;
-		
+
 		//Store the actual amount Y is being scaled for finding the world coordinates of the mouse later
 		actualScaleY = scaleY;
-		
+
 		//Fit the image to the screen and letterbox/pillarbox it if needed
 		gl.glOrtho(cameraOrigin.x, (screenWidth + cameraOrigin.x)*scaleX, cameraOrigin.y, (screenHeight + cameraOrigin.y)*scaleY, 0, 1);
 
@@ -659,7 +587,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
         gl.glGetDoublev(GLMatrixFunc.GL_MODELVIEW_MATRIX,  modelMatrix, 0);
 
 	}
-	
+
 	/**
 	 * Updates the clouds for the summer scene
 	 * @param counter
@@ -692,11 +620,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			}
 		}
 	}
-	
+
 	/******************************************/
 	/*KeyListener Methods*/
 	/******************************************/
-	
+
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -715,7 +643,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 				setAreLeavesFalling();
 				break;
 		}
-		
+
 		return;
 	}
 
@@ -730,7 +658,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	{
 		updateMousePosition(e);
 	}
-	
+
 	/******************************************/
 	/*MouseListener Methods*/
 	/******************************************/
@@ -791,7 +719,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	              projectionMatrix, 0,
 	              viewport, 0,
 	              wCoord, 0);
-		
+
 		//Update the mouse position
 		mousePosition = new Point2D.Double(wCoord[0], (((screenHeight + cameraOrigin.y)*actualScaleY)-wCoord[1]));
 	}
