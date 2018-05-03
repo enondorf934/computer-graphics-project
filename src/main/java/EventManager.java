@@ -110,12 +110,14 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 	private boolean areLeavesFalling = false;	// true if leaves are falling, else false
 	private int frameCounter = 0;							// the number of frames since leaves began falling
 	private static double leafDy = 0.0;				// displacement in y-direction of falling leaves
+	private static int leafAngle = 0;
 
 	// the offset in number of frames between falling leaf clusters
 	private static final int NUM_FRAMES_OFFSET = 5;
 
 	// the incremental displacement of falling leaves in the negative y-direction
 	private static final double LEAF_DY_INCREMENT = -5.0;
+	private static final int LEAF_ANGLE_INCREMENT = 2;
 
 	//****************************************************************************
 
@@ -269,6 +271,11 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 		}
 	}
 
+	private void incrementLeafAngle()
+	{
+		leafAngle += LEAF_ANGLE_INCREMENT;
+	}
+
 	private void incrementLeafDy()
 	{
 		leafDy += LEAF_DY_INCREMENT;
@@ -289,6 +296,7 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 
 		// Increase displacement of falling leaf clusters
 		incrementLeafDy();
+		incrementLeafAngle();
 
 		// Increment frame counter
 		incrementFrameCounter();
@@ -361,12 +369,23 @@ public class EventManager implements GLEventListener, KeyListener, MouseListener
 			// If leaf cluster is falling, translate in negative y-direction
 			if (leafCluster.getIsFalling())
 			{
+				// Get center of leaf cluster
+				double cx = leafCluster.getCx();
+				double cy = leafCluster.getCy();
+
 				// Calculate displacement of falling leaf cluster
 				double dy = leafDy - (NUM_FRAMES_OFFSET * LEAF_DY_INCREMENT * i);
 
 				gl.glPushMatrix();							// Copy the CT for local changes
-				gl.glTranslated(0.0, dy, 0.0);	// Translate in y-direction
+
+				// Apply transformation matrices in reverse order
+				gl.glTranslated(0.0, dy, 0.0);						// Translate in y-direction
+				gl.glTranslated(cx, cy, 0.0);							// Move leaf cluster back to original position
+				gl.glRotated(-leafAngle, 0.0, 0.0, 1.0);		// Rotate leaf cluster
+				gl.glTranslated(-cx, -cy, 0.0);						// Move leaf cluster to origin
+
 				leafCluster.draw(gl);						// Draw leaf cluster
+
 				gl.glPopMatrix();								// Restore the CT from before
 			}
 			// Else, draw leaf cluster without translating
