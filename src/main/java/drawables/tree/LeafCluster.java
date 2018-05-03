@@ -29,6 +29,8 @@ public final class LeafCluster implements Drawable, Shape
   private float b;              // blue color value
   private float alpha = 0.60f;  // default transparency
 
+  private boolean isFalling;    // true if the leaf cluster is falling, else false
+
   //****************************************************************************
 
   // Constructors
@@ -44,17 +46,8 @@ public final class LeafCluster implements Drawable, Shape
     r = 0.32f;
     g = 0.68f;
     b = 0.40f;
-  }
 
-  public LeafCluster(double cx, double cy, double radius, float r, float g, float b)
-  {
-    this.cx = cx;
-    this.cy = cy;
-    this.radius = radius;
-
-    this.r = r;
-    this.g = g;
-    this.b = b;
+    isFalling = false;
   }
 
   //****************************************************************************
@@ -64,6 +57,16 @@ public final class LeafCluster implements Drawable, Shape
     this.r = r;
     this.g = g;
     this.b = b;
+  }
+
+  public void setIsFalling(boolean isFalling)
+  {
+    this.isFalling = isFalling;
+  }
+
+  public boolean getIsFalling()
+  {
+    return isFalling;
   }
 
   //****************************************************************************
