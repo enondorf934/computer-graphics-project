@@ -1,5 +1,6 @@
 package drawables.tree;
 
+import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 import javax.media.opengl.*;
@@ -16,7 +17,16 @@ import drawables.Shape;
  */
 public final class LeafCluster implements Drawable, Shape
 {
+  private static final Random random = new Random();
+
   private static final int NUM_SIDES = 6;
+
+  private static final float HUE = 133.37f;
+  private static final float SATURATION = 0.53f;
+  private static final float BRIGHTNESS = 0.68f;
+
+  private static final float MIN_BRIGHTNESS = 0.50f;
+  private static final float MAX_BRIGHTNESS = 0.80f;
 
   private double cx;               // x-coordinate of center of leaf cluster
   private double cy;               // y-coordinate of center of leaf cluster
@@ -24,9 +34,9 @@ public final class LeafCluster implements Drawable, Shape
 
   private ArrayList<Point2D.Double> vertices; // vertices of leaf cluster
 
-  private float r;              // red color value
-  private float g;              // green color value
-  private float b;              // blue color value
+  private float h;              // hue component of the color
+  private float s;              // saturation component of the color
+  private float b;              // brightness component of the color
   private float alpha = 0.60f;  // default transparency
 
   private boolean isFalling;    // true if the leaf cluster is falling, else false
@@ -41,21 +51,18 @@ public final class LeafCluster implements Drawable, Shape
     this.radius = radius;
 
     calculateVertices();
-
-    // Default green
-    r = 0.32f;
-    g = 0.68f;
-    b = 0.40f;
-
-    isFalling = false;
+    
+    generateRandomColor();
   }
 
-  //****************************************************************************
-
-  public void setColor(float r, float g, float b)
+  public LeafCluster(double cx, double cy, double radius, float h, float s, float b)
   {
-    this.r = r;
-    this.g = g;
+    this.cx = cx;
+    this.cy = cy;
+    this.radius = radius;
+
+    this.h = h;
+    this.s = s;
     this.b = b;
   }
 
@@ -98,10 +105,29 @@ public final class LeafCluster implements Drawable, Shape
     }
   }
 
+  private void generateRandomColor()
+  {
+    // Set hue and saturation components to default values
+    h = HUE;
+    s = SATURATION;
+
+    // Generate random brightness component within range
+    b = (MAX_BRIGHTNESS - MIN_BRIGHTNESS) * (float)random.nextDouble() + MIN_BRIGHTNESS;
+  }
+
+  private void setColor(GL2 gl)
+  {
+    // Convert color components from HSB to RGB
+    Color rgb = new Color(Color.HSBtoRGB(h, s, b));
+
+    // Use RGB components to set color
+    gl.glColor4f(rgb.getRed()/255.f, rgb.getGreen()/255.0f, rgb.getBlue()/255.0f, alpha);
+  }
+
   private void fillLeafCluster(GL2 gl)
   {
     gl.glBegin(GL2.GL_POLYGON);
-    gl.glColor4f(r, g, b, alpha);
+    setColor(gl);
 
     for (Point2D.Double vertex : vertices)
     {

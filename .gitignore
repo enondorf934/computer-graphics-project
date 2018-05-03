@@ -29,3 +29,7 @@ gradle-app.setting
 .classpath
 .project
 /bin/
+*.html
+*.js
+doc/package-list
+*.css

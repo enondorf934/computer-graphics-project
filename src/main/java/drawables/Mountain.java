@@ -30,11 +30,45 @@ public class Mountain implements Drawable, Shape
 		this.height = height;
         this.width = width;
         
-        Random rand2 = new Random();
+        Random rand = new Random();
 
-		this.r = rand2.nextFloat()/4f;
-		this.g = rand2.nextFloat();
-		this.b = rand2.nextFloat()/4f;
+        double randValue = rand.nextDouble();
+
+        if(randValue >= 0 && randValue <.20)
+        {
+            this.r = 0.564f;
+            this.g = 0.105f;
+            this.b = 0.035f;
+        }
+        else if(randValue >=.20 && randValue <.40)
+        {
+            this.r = 0.701f;
+            this.g = 0.282f;
+            this.b = 0.215f;
+
+        }
+        else if(randValue >=.40 && randValue <.60)
+        {
+            this.r = 0.835f;
+            this.g = 0.376f;
+            this.b = 0.164f;
+
+        }
+        else if(randValue >=.60 && randValue <.80)
+        {
+            this.r = 0.878f;
+            this.g = 0.443f;
+            this.b = 0.043f;
+
+        }
+        else if(randValue >=.80 && randValue <=1.0)
+        {
+            this.r = 0.913f;
+            this.g = 0.611f;
+            this.b = 0.184f;
+
+        }
+
 		this.alpha = 1f;
     }
 

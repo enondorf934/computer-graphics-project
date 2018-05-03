@@ -11,15 +11,41 @@ import javax.media.opengl.GL2;
 
 import reusable.graphicsPrimitives.Vec2;
 
+/**
+ * A class for spawning lots of Snowflakes
+ * @author DEMcKnight
+ *
+ */
 public class SnowFlurry
 {
 	//Snowflurry boundaries (defines where snowflakes begin and disappear
+	/**
+	 * The minimum x value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 */
 	public double minX;
+	/**
+	 * The minimum x value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 */
 	public double maxX;
+	/**
+	 * A Y value past which point this SnowFlurry's Snowflakes will be despawned with probability 0.002
+	 */
+	public double disY;
+	/**
+	 * The minimum Y value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 */
 	public double minY;
+	/**
+	 * The maximum Y value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 */
 	public double maxY;
 	
-	private double lowestY = 0;
+	/**
+	 * The lowest Y-value that any of the Snowflakes that have been a part of this SnowFlurry has achieved
+	 */
+	private double lowestY = Double.POSITIVE_INFINITY;
+	
+
 	public double getLowestY() {return lowestY;};
 	
 	//How often snowflakes should occur
@@ -31,16 +57,18 @@ public class SnowFlurry
 	
 	/**
 	 * Instantiates a Snowflurry box with the given boundaries
-	 * @param minX
-	 * @param maxX
-	 * @param minY
-	 * @param maxY
+	 * @param minX The minimum X value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 * @param maxX The maximum X value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 * @param disY A Y value past which point this SnowFlurry's Snowflakes will be despawned with probability 0.002
+	 * @param minY The minimum Y value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
+	 * @param maxY The maximum Y value that this SnowFlurry's Snowflakes can travel. Past this point they are despawned.
 	 * @param flakeOccurrence Probability a new snowflake should appear at each frame
 	 */
-	public SnowFlurry(double minX, double maxX, double minY, double maxY, double flakeOccurrence) 
+	public SnowFlurry(double minX, double maxX, double disY, double minY, double maxY, double flakeOccurrence) 
 	{
 		this.minX = minX;
 		this.minY = minY;
+		this.disY = disY;
 		this.maxX = maxX;
 		this.maxY = maxY;
 		
@@ -81,7 +109,21 @@ public class SnowFlurry
 			s.update(timestep);
 			
 			//if its position is too high or too low, remove it
-			Vec2 pos = s.getPosition();	
+			Vec2 pos = s.getPosition();
+			
+			if (pos.getY() < lowestY)
+				lowestY = pos.getY();
+			
+			
+			if (pos.getY()<disY)
+			{
+				if (randy.nextDouble()<0.002)
+				{
+					snowflakes.remove(i);
+					i--;
+				}
+			}
+			
 			if (pos.getY()<minY || pos.getY() > maxY)
 			{
 				snowflakes.remove(i);
